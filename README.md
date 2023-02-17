@@ -93,3 +93,4 @@ git push origin development
 <!-- Definitions -->
 [nodejs]: https://nodejs.org/en/
 [reactjs]: https://reactjs.org/
+[reactnative]: https://reactnative.dev/
