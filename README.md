@@ -11,6 +11,7 @@
 * [Used Awesome Things](#used-awesome-things)
 * [Install and Run](#install-and-run)
 * [Important commands](#important-commands)
+* [Git commands](#git-commands)
 
 
 ### Description
@@ -50,6 +51,39 @@ npx react-native run-android
 ```sh
 # to see the connected device list
 adb devices
+```
+
+### Git Commands
+
+```sh
+# Copy the repository into your local pc
+git clone <repository_url>
+
+# see project status whether you have any changes or not
+git status
+
+# see local branches
+git branch
+
+# see local and remote branches
+git branch -a
+
+# switch to a new branch
+git checkout -b <branch_name>
+
+# switch to an existing branch
+git checkout <branch_name>
+
+# stage all your changes
+git add .
+
+# commit your changes
+git commit -m "your commit message"
+
+# after pushing to your branch, switch to development branch and merge your branch with development branch
+git checkout development
+git merge jenisha
+git push origin development
 ```
 
 ### Emulator things
