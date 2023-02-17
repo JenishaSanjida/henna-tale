@@ -59,6 +59,9 @@ adb devices
 # Copy the repository into your local pc
 git clone <repository_url>
 
+# see project status whether you have any changes or not
+git status
+
 # see local branches
 git branch
 
@@ -77,8 +80,10 @@ git add .
 # commit your changes
 git commit -m "your commit message"
 
-# see project status whether you have any changes or not
-git status
+# after pushing to your branch, switch to development branch and merge your branch with development branch
+git checkout development
+git merge jenisha
+git push origin development
 ```
 
 ### Emulator things
