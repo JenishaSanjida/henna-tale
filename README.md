@@ -59,3 +59,4 @@ adb devices
 <!-- Definitions -->
 [nodejs]: https://nodejs.org/en/
 [reactjs]: https://reactjs.org/
+[reactnative]: https://reactnative.dev/
