@@ -84,6 +84,9 @@ git commit -m "your commit message"
 git checkout development
 git merge jenisha
 git push origin development
+
+# pull from remote branch
+git pull origin development
 ```
 
 ### Emulator things

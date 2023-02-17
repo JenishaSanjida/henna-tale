@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import AppIntroSlider from "react-native-app-intro-slider";
 import styles from "./styles";
 import WalkthroughAppConfig from "../../constants/WalkthroughAppConfig";
+import LoginScreen from "../../components/screens/Login";
 
 // import all the components we are going to use
 import { SafeAreaView, View, Image, Text, Button } from "react-native";
@@ -69,21 +70,23 @@ const WalkthroughScreen = () => {
   return (
     <>
       {showRealApp ? (
-        <SafeAreaView style={styles.container}>
-          <View style={styles.container}>
-            <Text style={styles.titleStyle}>
-              React Native App Intro Slider using AppIntroSlider
-            </Text>
-            <Text style={styles.paragraphStyle}>
-              This will be your screen when you click Skip
-              from any slide or Done button at last
-            </Text>
-            <Button
-              title="Show Intro Slider again"
-              onPress={() => setShowRealApp(false)}
-            />
-          </View>
-        </SafeAreaView>
+
+        <LoginScreen />
+        // <SafeAreaView style={styles.container}>
+        //   <View style={styles.container}>
+        //     <Text style={styles.titleStyle}>
+        //       React Native App Intro Slider using AppIntroSlider
+        //     </Text>
+        //     <Text style={styles.paragraphStyle}>
+        //       This will be your screen when you click Skip
+        //       from any slide or Done button at last
+        //     </Text>
+        //     <Button
+        //       title="Show Intro Slider again"
+        //       onPress={() => setShowRealApp(false)}
+        //     />
+        //   </View>
+        // </SafeAreaView>
       ) : (
         <AppIntroSlider
           data={slides}

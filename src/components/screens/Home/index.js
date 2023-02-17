@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StatusBar, ScrollView} from 'react-native'
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
-import Post from '../screenComponents/Post';
+import Post from '../../screenComponents/Post';
 
 
 const Home = () => {
