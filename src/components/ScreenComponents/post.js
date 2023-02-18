@@ -5,7 +5,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 import Ionic from "react-native-vector-icons/Ionicons"
 
 
-const Post= () => {
+const post= () => {
 
      const postInfo = [
         {
@@ -93,4 +93,4 @@ const Post= () => {
   );
 };
 
-export default Post
+export default post

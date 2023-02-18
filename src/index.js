@@ -11,13 +11,13 @@ import {
   View,
 } from 'react-native';
 
-import WalkthroughScreen from "./src/screens/WalkthroughScreen/WalkthroughScreen";
+import Walkthrough from "./screens/Walkthrough";
 
 
 export default function App() {
 
   return (
 
-    <WalkthroughScreen />
+    <Walkthrough />
   );
 }

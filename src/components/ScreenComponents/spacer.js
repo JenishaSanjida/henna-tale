@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text} from 'react-native';
 
-const Spacer = () => {
+const spacer = () => {
     return (
         <View>
         <Text></Text>
@@ -9,4 +9,4 @@ const Spacer = () => {
 
     )
 }
-export default Spacer;
+export default spacer;

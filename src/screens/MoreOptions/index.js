@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
-import Spacer from '../../screenComponents/Spacer';
+import Spacer from '../../components/ScreenComponents/spacer';
 
 const MoreOptions = (props) => {
     return (

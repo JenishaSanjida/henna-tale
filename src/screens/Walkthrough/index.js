@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import AppIntroSlider from "react-native-app-intro-slider";
 import styles from "./styles";
-import WalkthroughAppConfig from "../../constants/WalkthroughAppConfig";
-import LoginScreen from "../../components/screens/Login";
+import walkthroughAppConfig from "../../constants/walkthroughAppConfig";
+import Login from "../Login";
 
 // import all the components we are going to use
 import { SafeAreaView, View, Image, Text, Button } from "react-native";
@@ -12,9 +12,9 @@ import { SafeAreaView, View, Image, Text, Button } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
-const WalkthroughScreen = () => {
+const Walkthrough = () => {
   const [showRealApp, setShowRealApp] = useState(false);
-  const [slides, setSlides] = useState(WalkthroughAppConfig);
+  const [slides, setSlides] = useState(walkthroughAppConfig);
 
   const onDone = () => {
     setShowRealApp(true);
@@ -71,7 +71,7 @@ const WalkthroughScreen = () => {
     <>
       {showRealApp ? (
 
-        <LoginScreen />
+        <Login />
         // <SafeAreaView style={styles.container}>
         //   <View style={styles.container}>
         //     <Text style={styles.titleStyle}>
@@ -100,4 +100,4 @@ const WalkthroughScreen = () => {
   );
 };
 
-export default WalkthroughScreen;
+export default Walkthrough;

@@ -1,12 +1,12 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Home from '../screens/Home';
-import Search from '../screens/Search';
-import Activity from '../screens/Activity';
-import Profile from '../screens/Profile';
+import Home from '../../screens/Home';
+import Search from '../../screens/Search';
+import Activity from '../../screens/Activity';
+import Profile from '../../screens/Profile';
 import Ionic from "react-native-vector-icons/Ionicons";
-import MoreOptions from "../screens/MoreOptions";
+import MoreOptions from "../../screens/MoreOptions";
 
 const Navigator = () => {
     const Stack = createNativeStackNavigator();
