@@ -32,6 +32,15 @@ export default function Login() {
     // Add your login logic here
   };
 
+  // const handleRegister = () => {
+  //   // Handle registration functionality here
+  // };
+
+  // const toggleRegistration = () => {
+  //   setShowRegistration(!showRegistration);
+  // };
+
+
   return (
     <>
 
@@ -53,6 +62,11 @@ export default function Login() {
           />
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+          
+
+          <TouchableOpacity style={styles.registerButton} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Register</Text>
           </TouchableOpacity>
         </View>
       )}

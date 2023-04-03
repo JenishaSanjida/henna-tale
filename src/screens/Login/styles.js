@@ -28,6 +28,16 @@ export const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
+    registerButton: {
+      backgroundColor: '#2196F3',
+      borderRadius: 4,
+      width: '80%',
+      height: 40,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 10
+    },
+
     buttonText: {
       color: '#fff',
       fontSize: 16,
