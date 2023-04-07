@@ -6,12 +6,12 @@
  */
 
 import React from "react";
-import {
-  Text,
-  View,
-} from 'react-native';
 
+import {StyleSheet, Text, View} from 'react-native';
 import Walkthrough from "./screens/Walkthrough";
+
+// const Tab = createMaterialBottomTabNavigator();
+// const Stack = createStackNavigator();
 
 
 export default function App() {
@@ -19,5 +19,8 @@ export default function App() {
   return (
 
     <Walkthrough />
+    // <NavigationContainer>
+    //   <MyDrawer />
+    // </NavigationContainer>
   );
 }

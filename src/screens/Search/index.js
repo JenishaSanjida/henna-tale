@@ -1,26 +1,25 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Button, ActivityIndicator, ScrollView, Linking, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, Button, ActivityIndicator, ScrollView, Linking, TouchableOpacity } from 'react-native'
 
 import UserList from '../../constants/userList';
-import {Avatar, ListItem, SearchBar} from 'react-native-elements';
+import { Avatar, ListItem, SearchBar } from 'react-native-elements';
 // import Icon from 'react-native-vector-icons/Ionicons';
 
 const Search = () => {
 
     const [users, setUsers] = useState(UserList);
+    const [data, setData] = useState(UserList);
     const [search, setSearch] = useState('');
 
     const handleSearch = text => {
 
-        const tempUsers = [...users];
-        
         setSearch(text);
-        const filteredList = tempUsers.filter(item =>
-          item.name.toLowerCase().includes(text.toLowerCase()),
+        const filteredList = data.filter(item =>
+            item.name.toLowerCase().includes(text.toLowerCase()),
         );
         setUsers(filteredList);
-      };
-    
+    };
+
 
     return (
         <View

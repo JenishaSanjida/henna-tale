@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { styles } from './styles';
-import Navigator from '../../components/Navigators';
+import MyDrawer from '../../components/DrawerNavigator';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -44,7 +44,7 @@ export default function Login() {
   return (
     <>
 
-      {isLoggedIn ? (<Navigator />) : (
+      {isLoggedIn ? (<MyDrawer />) : (
         <View style={styles.container}>
           <Text style={styles.title}>Login</Text>
           <TextInput
@@ -63,7 +63,7 @@ export default function Login() {
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-          
+
 
           <TouchableOpacity style={styles.registerButton} onPress={handleLogin}>
             <Text style={styles.buttonText}>Register</Text>

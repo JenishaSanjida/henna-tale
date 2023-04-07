@@ -1,35 +1,81 @@
 import React from 'react'
-import { View, Text, StatusBar, ScrollView} from 'react-native'
+import { View, Text, StatusBar, ScrollView } from 'react-native'
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import Post from '../../components/ScreenComponents/post';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+const Stack = createNativeStackNavigator();
 
 const Home = () => {
     return (
-        <View style= {{backgroundColor: 'white', height: '100%'}}>
-                <StatusBar backgroundColor= "white" barStyle= "dark-content" animated={true}/>
-                <View 
-                
-            style={{
+        <View style={{ backgroundColor: 'white', height: '100%' }}>
+            <StatusBar backgroundColor="white" barStyle="dark-content" animated={true} />
+            <View
+
+                style={{
                     justifyContent: 'space-between',
                     flexDirection: 'row',
                     paddingHorizontal: 15,
                     alignItems: 'center',
                 }}>
 
-                    <FontAwesome name= "plus-square-o" style={{fontSize: 24}}/>
-                    <Text style= {{fontFamily: "Lobster-Regular", fontSize: 25, fontWeight: '500'}}>
-                        HennaTales
-                    </Text>
-                    <Feather name="navigation" style={{fontSize: 24}}/>
-                </View>
+{/* 
+                <TouchableOpacity onPress={() => {
+                    // navigation.openDrawer();
+                }}>
 
-                <ScrollView>
-                    <Post/>
-                </ScrollView>
+                    <FontAwesome name="navicon" style={{ fontSize: 24 }} />
+                </TouchableOpacity> */}
+                <Text style={{ fontFamily: "Lobster-Regular", fontSize: 25, fontWeight: '500' }}>
+                    
+                </Text>
+                <Feather name="navigation" style={{ fontSize: 24 }} />
+            </View>
+
+            <ScrollView>
+                <Post />
+            </ScrollView>
 
         </View>
     );
 };
-export default Home
+
+const HomeScreenStack = () => {
+
+    const navigation = useNavigation();
+
+    const handleOpenDrawer = () => {
+        navigation.openDrawer();
+    };
+
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerStyle: {
+                    backgroundColor: '#fff',
+                },
+                headerTitleStyle: {
+                    // fontFamily: 'Ubuntu-Bold',
+                    color: '#000',
+                },
+                headerTitleAlign: 'center',
+                headerLeft: () => (
+                    <TouchableOpacity onPress={handleOpenDrawer} style={{ marginLeft: 10 }}>
+                        <FontAwesome name="navicon" style={{ fontSize: 24 }} />
+                    </TouchableOpacity>
+                ),
+                headerLeftContainerStyle: { marginLeft: 10 },
+            }}>
+            <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{ title: 'HennaTales' }}
+            />
+        </Stack.Navigator>
+    );
+};
+
+export default HomeScreenStack

@@ -10,6 +10,7 @@ import Login from "../Login";
 import { SafeAreaView, View, Image, Text, Button } from "react-native";
 //import AppIntroSlider to use it
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MyDrawer from "../../components/DrawerNavigator";
 
 
 const Walkthrough = () => {
@@ -70,8 +71,8 @@ const Walkthrough = () => {
   return (
     <>
       {showRealApp ? (
-
-        <Login />
+        <MyDrawer />
+        // <Login />
         // <SafeAreaView style={styles.container}>
         //   <View style={styles.container}>
         //     <Text style={styles.titleStyle}>
