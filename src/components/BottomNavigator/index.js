@@ -2,11 +2,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreenStack from "../../screens/Home";
-import Search from '../../screens/Search';
-import Activity from '../../screens/Activity';
-import Profile from '../../screens/Profile';
+import SearchScreenStack from '../../screens/Search';
+import ActivityScreenStack from '../../screens/Activity';
+import ProfileScreenStack from '../../screens/Profile';
 import Ionic from "react-native-vector-icons/Ionicons";
-import MoreOptions from "../../screens/MoreOptions";
+
 
 const BottomNavigator = () => {
 
@@ -29,30 +29,26 @@ const BottomNavigator = () => {
                         iconName = focused ? "home-sharp" : "home-outline";
                         size = focused ? size + 8 : size + 2;
                     }
-                    else if (route.name === "Search") {
+                    else if (route.name === "SearchScreenStack") {
                         iconName = focused ? "search" : "ios-search-outline"
                     }
-                    else if (route.name === "Profile") {
+                    else if (route.name === "ProfileScreenStack") {
                         iconName = focused ? "ios-person-circle" : "ios-person-outline"
                     }
-                    else if (route.name === "Activity") {
+                    else if (route.name === "ActivityScreenStack") {
                         iconName = focused ? "ios-heart" : "ios-heart-outline"
                     }
-                    else if (route.name === "MoreOptions") {
-                        iconName = focused ? "menu-outline" : "menu-outline"
-                    }
-
+                    
                     return <Ionic name={iconName} size={size} color={'#000'} />
                 }
 
             })}>
 
             <Tab.Screen name="HomeScreenStack" component={HomeScreenStack} />
-            <Tab.Screen name="Search" component={Search} />
-            <Tab.Screen name="Profile" component={Profile} />
-            <Tab.Screen name="Activity" component={Activity} />
-            <Tab.Screen name="MoreOptions" component={MoreOptions} />
-
+            <Tab.Screen name="SearchScreenStack" component={SearchScreenStack} />
+            <Tab.Screen name="ProfileScreenStack" component={ProfileScreenStack} />
+            <Tab.Screen name="ActivityScreenStack" component={ActivityScreenStack} />
+            
         </Tab.Navigator>
 
 
