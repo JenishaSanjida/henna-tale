@@ -19,7 +19,8 @@ const BottomNavigator = () => {
                 tabBarShowLabel: false,
                 headerShown: false,
                 tabBarStyle: {
-                    height: 50
+                    height: 50,
+                    display: route.name === 'MyOrder' ? 'none' : 'flex'
                 },
 
                 tabBarIcon: ({ focused, size, color }) => {
@@ -38,7 +39,8 @@ const BottomNavigator = () => {
                     else if (route.name === "ActivityScreenStack") {
                         iconName = focused ? "ios-heart" : "ios-heart-outline"
                     }
-                    
+
+
                     return <Ionic name={iconName} size={size} color={'#000'} />
                 }
 
@@ -48,7 +50,7 @@ const BottomNavigator = () => {
             <Tab.Screen name="SearchScreenStack" component={SearchScreenStack} />
             <Tab.Screen name="ProfileScreenStack" component={ProfileScreenStack} />
             <Tab.Screen name="ActivityScreenStack" component={ActivityScreenStack} />
-            
+
         </Tab.Navigator>
 
 

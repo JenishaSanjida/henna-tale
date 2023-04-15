@@ -4,8 +4,10 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import Post from '../../components/ScreenComponents/post';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MyOrder from '../MyOrders';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,7 +24,7 @@ const Home = () => {
                     alignItems: 'center',
                 }}>
 
-{/* 
+                {/* 
                 <TouchableOpacity onPress={() => {
                     // navigation.openDrawer();
                 }}>
@@ -30,7 +32,7 @@ const Home = () => {
                     <FontAwesome name="navicon" style={{ fontSize: 24 }} />
                 </TouchableOpacity> */}
                 <Text style={{ fontFamily: "Lobster-Regular", fontSize: 25, fontWeight: '500' }}>
-                    
+
                 </Text>
                 <Feather name="navigation" style={{ fontSize: 24 }} />
             </View>
@@ -49,6 +51,11 @@ const HomeScreenStack = () => {
 
     const handleOpenDrawer = () => {
         navigation.openDrawer();
+    };
+
+    const goBack = () => {
+        const popAction = StackActions.pop(1);
+        navigation.dispatch(popAction);
     };
 
     return (
@@ -73,6 +80,22 @@ const HomeScreenStack = () => {
                 name="Home"
                 component={Home}
                 options={{ title: 'HennaTales' }}
+            />
+            <Stack.Screen
+                name="MyOrder"
+                component={MyOrder}
+                
+                options={{
+                    headerTitleAlign: 'left',
+                    headerTintColor: '#fff',
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={goBack} style={{ marginLeft: 0 }}>
+                            <Icon name="arrow-back" size={30} color="#000" />
+                        </TouchableOpacity>
+                    ),
+                    // headerShown: true,
+
+                }}
             />
         </Stack.Navigator>
     );

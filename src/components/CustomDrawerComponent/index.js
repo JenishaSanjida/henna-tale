@@ -50,7 +50,7 @@ const CustomDrawerContent = ({ navigation }) => {
                     <DrawerItem
                         label="My Profile"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
-                        onPress={() => navigation.navigate('ProfileScreenStack')}
+                        onPress={() => navigation.push('ProfileScreenStack')}
                         icon={({ color, size }) => (
                             <Icon name="map" color={'#000'} size={24} />
                         )}
@@ -58,7 +58,7 @@ const CustomDrawerContent = ({ navigation }) => {
                     <DrawerItem
                         label="My Orders"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
-                        onPress={() => navigation.navigate('SearchScreenStack')}
+                        onPress={() => navigation.navigate('MyOrder')}
                         icon={({ color, size }) => (
                             <Icon name="globe" color={'#000'} size={24} />
                         )}
