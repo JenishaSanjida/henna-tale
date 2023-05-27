@@ -1,5 +1,8 @@
 import React, { useMemo } from 'react';
-import { DatePickerAndroid } from 'react-native';
+// import { DatePickerAndroid } from 'react-native';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
+
 import { format } from 'date-fns';
 // import pt from 'date-fns/locale/pt';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -8,22 +11,31 @@ import { enUS, enCA, ro, it, ptBR } from "date-fns/locale";
 
 import { Container, DateButton, DateText } from './styles';
 
-export default function DateInput({ date, onChange }) {
+export default function DateInput({ date, ...props }) {
+
     const dateFormatted = useMemo(
         () => format(date, "dd MMMM yyyy", { locale: enUS }),
         [date],
     );
 
-    async function handleOpenPicker() {
-        const { action, year, month, day } = await DatePickerAndroid.open({
-            mode: 'spinner',
-            date,
-        });
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const day = currentDate.getDate();
+        const newSelectedDate = new Date(year, month, day);
+        // console.log(year, month, day);
+        props.onChange(newSelectedDate);
+        // console.log(newSelectedDate);
+    };
 
-        if (action === DatePickerAndroid.dateSetAction) {
-            const selectedDate = new Date(year, month, day);
-            onChange(selectedDate);
-        }
+
+    function handleOpenPicker() {
+        DateTimePickerAndroid.open({
+            value: date,
+            onChange,
+            mode: "date",
+        });
     }
 
     return (

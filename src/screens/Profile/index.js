@@ -7,12 +7,15 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Background from '../../components/Background';
 import { Container, Hour, HourList } from './styles';
 import DateInput from '../../components/DateInput';
-import { Title } from 'react-native-paper';
+import { Title, Button } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
+import Confirm from '../NewAppointment/Confirm';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 const Stack = createNativeStackNavigator();
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
 
     const [date, setDate] = useState(new Date());
     const [hours, setHours] = useState([
@@ -27,9 +30,15 @@ const Profile = () => {
             value: "11:00"
         }
     ]);
+    const [selectedTime, setSelectedTime] = useState("");
 
     async function handleSelectHour({ value }) {
+        console.log("date and time value");
         console.log(value);
+        console.log(date);
+        setSelectedTime(value);
+        navigation.navigate('Confirm', { date: date, time: value });
+
     }
 
     const formatDate = stringDate => {
@@ -92,6 +101,27 @@ const ProfileScreenStack = () => {
                 name="Profile"
                 component={Profile}
                 options={{ title: 'HennaTales' }}
+            />
+            <Stack.Screen
+                name="Confirm"
+                component={Confirm}
+                // options={{
+                //     headerStyle: {
+                //         backgroundColor: '#fff',
+                //     },
+                //     headerTitleStyle: {
+                //         // fontFamily: 'Ubuntu-Bold',
+                //         color: '#000',
+                //     },
+                //     headerTitleAlign: 'left',
+                //     headerLeft: () => (
+                //         <TouchableOpacity onPress={() => navigation.pop()}>
+                //             <Icon name="chevron-left" size={22} color="#000" />
+                //         </TouchableOpacity>
+
+                //     ),
+                //     headerLeftContainerStyle: { marginLeft: 10 },
+                // }}
             />
         </Stack.Navigator>
     );
