@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Button, ActivityIndicator, ScrollView, Linking, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UserList from '../../constants/userList';
 import { Avatar, ListItem, SearchBar } from 'react-native-elements';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { BASE_URL_PLACE } from '../../constants/apiConfig';
+import { Picker } from '@react-native-picker/picker';
+
 // import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +28,72 @@ const Search = () => {
         setUsers(filteredList);
     };
 
+    /**
+     * All actions for handling division, district and thana selection
+     */
+
+    const [division, setDivision] = useState('');
+    const [dropdown2Value, setDropdown2Value] = useState('');
+    const [dropdown3Value, setDropdown3Value] = useState('');
+
+    const [dropdown1Options, setDropdown1Options] = useState([]);
+    const [dropdown2Options, setDropdown2Options] = useState([]);
+    const [dropdown3Options, setDropdown3Options] = useState([]);
+
+    useEffect(() => {
+        fetchDropdown1Options();
+    }, []);
+
+    useEffect(() => {
+        if (division !== '') {
+            fetchDropdown2Options();
+            setDropdown3Options([]);
+        }
+    }, [division]);
+
+    useEffect(() => {
+        if (dropdown2Value !== '') {
+            fetchDropdown3Options();
+        }
+    }, [dropdown2Value]);
+
+    const fetchDropdown1Options = async () => {
+        try {
+            const response = await fetch(`${BASE_URL_PLACE}/divisions`);
+            const data = await response.json();
+            console.log("data");
+            console.log(data);
+            setDropdown1Options(data?.data);
+        } catch (error) {
+            console.error('Error fetching dropdown 1 options:', error);
+        }
+    };
+
+    const fetchDropdown2Options = async () => {
+        try {
+            const response = await fetch(
+                `${BASE_URL_PLACE + division}`
+            );
+            const data = await response.json();
+            setDropdown2Options(data?.data);
+        } catch (error) {
+            console.error('Error fetching dropdown 2 options:', error);
+        }
+    };
+
+    const fetchDropdown3Options = async () => {
+        try {
+            const response = await fetch(
+                `${BASE_URL_PLACE + division + "/" + dropdown2Value}`
+            );
+            const data = await response.json();
+            setDropdown3Options(data?.data);
+        } catch (error) {
+            console.error('Error fetching dropdown 3 options:', error);
+        }
+    };
+
+
 
     return (
         <View
@@ -31,7 +101,7 @@ const Search = () => {
                 flex: 1,
                 backgroundColor: '#d0e0e3',
             }}>
-            <SearchBar
+            {/* <SearchBar
                 placeholder="Search"
                 onChangeText={handleSearch}
                 value={search}
@@ -46,7 +116,56 @@ const Search = () => {
                     color: '#000',
                     fontFamily: 'Ubuntu-Medium',
                 }}
-            />
+            /> */}
+
+            {/* Dropdown for location based search i.e division, district, thana */}
+            <View>
+                <Picker
+                    selectedValue={division}
+                    onValueChange={(value) => setDivision(value)}
+                    mode='dropdown'
+                >
+                    <Picker.Item label="Select Division" value="" />
+                    {dropdown1Options.map((option) => (
+                        <Picker.Item
+                            key={option}
+                            label={option}
+                            value={option}
+                        />
+                    ))}
+                </Picker>
+
+                <Picker
+                    selectedValue={dropdown2Value}
+                    onValueChange={(value) => setDropdown2Value(value)}
+                    mode='dropdown'
+                >
+                    <Picker.Item label="Select District" value="" />
+                    {dropdown2Options.map((option) => (
+                        <Picker.Item
+                            key={option}
+                            label={option}
+                            value={option}
+                        />
+                    ))}
+                </Picker>
+
+                <Picker
+                    selectedValue={dropdown3Value}
+                    onValueChange={(value) => setDropdown3Value(value)}
+                    mode='dropdown'
+                >
+                    <Picker.Item label="Select Thana" value="" />
+                    {dropdown3Options.map((option) => (
+                        <Picker.Item
+                            key={option}
+                            label={option}
+                            value={option}
+                        />
+                    ))}
+                </Picker>
+            </View>
+            {/* Dropdown for location based search i.e division, district, thana */}
             <ScrollView>
                 {users.map((item, index) => (
                     <TouchableOpacity
