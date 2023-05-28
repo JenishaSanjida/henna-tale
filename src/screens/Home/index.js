@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, StatusBar, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StatusBar, ScrollView, Image, FlatList, ActivityIndicator, Dimensions } from 'react-native'
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
 import Post from '../../components/ScreenComponents/post';
@@ -8,41 +8,133 @@ import { useNavigation, StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MyOrder from '../MyOrders';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { styles } from './styles';
 
 const Stack = createNativeStackNavigator();
 
-const Home = () => {
-    return (
-        <View style={{ backgroundColor: 'white', height: '100%' }}>
-            <StatusBar backgroundColor="white" barStyle="dark-content" animated={true} />
-            <View
+const UserCard = ({ avatar, picture, name, onPressViewProfile, onPressBookAppointment }) => (
 
-                style={{
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                    paddingHorizontal: 15,
-                    alignItems: 'center',
-                }}>
+    <View style={styles.cardContainer}>
 
-                {/* 
-                <TouchableOpacity onPress={() => {
-                    // navigation.openDrawer();
-                }}>
+        <View style={styles.headerContainer}>
+            <Image source={{ uri: avatar }} style={styles.avatar} />
+            <Text style={styles.name}>{name}</Text>
+        </View>
 
-                    <FontAwesome name="navicon" style={{ fontSize: 24 }} />
-                </TouchableOpacity> */}
-                <Text style={{ fontFamily: "Lobster-Regular", fontSize: 25, fontWeight: '500' }}>
+        <Image source={{ uri: picture }} style={styles.picture} />
 
-                </Text>
-                <Feather name="navigation" style={{ fontSize: 24 }} />
-            </View>
+        <View style={styles.buttonContainer}>
 
-            <ScrollView>
-                <Post />
-            </ScrollView>
+            <TouchableOpacity style={styles.button} onPress={onPressViewProfile}>
+                <Icon name="person" size={20} color="#FFFFFF" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>View Profile</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.button} onPress={onPressBookAppointment}>
+                <Icon name="calendar" size={20} color="#FFFFFF" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Book Appointment</Text>
+            </TouchableOpacity>
 
         </View>
+
+    </View>
+);
+
+const Home = () => {
+
+    const [loading, setLoading] = useState(false);
+    const [users, setUsers] = useState([
+        {
+            id: 1,
+            avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+            picture: 'https://picsum.photos/200/300?random',
+            name: 'John Doe',
+        },
+        {
+            id: 2,
+            avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
+            picture: 'https://picsum.photos/200/300?random',
+            name: 'Jane Smith',
+        },
+        // Add more users as needed
+    ]);
+
+    const handleViewProfile = (user) => {
+        console.log('View Profile:', user.name);
+        // Handle view profile event
+    };
+
+    const handleBookAppointment = (user) => {
+        console.log('Book Appointment:', user.name);
+        // Handle book appointment event
+    };
+
+    const renderUserCard = ({ item }) => (
+        <UserCard
+            avatar={item.avatar}
+            picture={item.picture}
+            name={item.name}
+            onPressViewProfile={() => handleViewProfile(item)}
+            onPressBookAppointment={() => handleBookAppointment(item)}
+        />
     );
+
+    const renderItemSeparator = () => <View style={styles.separator} />;
+
+    const renderFooter = () => {
+        if (!loading) return null;
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="small" color="#000000" />
+            </View>
+        );
+    };
+
+    return (
+        <FlatList
+            data={users}
+            renderItem={renderUserCard}
+            ItemSeparatorComponent={renderItemSeparator}
+            ListFooterComponent={renderFooter}
+            keyExtractor={(item) => item.id.toString()}
+            onEndReached={() => {
+                // Fetch more users or handle lazy loading
+                setLoading(true);
+            }}
+            onEndReachedThreshold={0.5} // Adjust as needed
+        />
+    );
+    // return (
+    //     <View style={{ backgroundColor: 'white', height: '100%' }}>
+    //         <StatusBar backgroundColor="white" barStyle="dark-content" animated={true} />
+    //         <View
+
+    //             style={{
+    //                 justifyContent: 'space-between',
+    //                 flexDirection: 'row',
+    //                 paddingHorizontal: 15,
+    //                 alignItems: 'center',
+    //             }}>
+
+    //             {/* 
+    //             <TouchableOpacity onPress={() => {
+    //                 // navigation.openDrawer();
+    //             }}>
+
+    //                 <FontAwesome name="navicon" style={{ fontSize: 24 }} />
+    //             </TouchableOpacity> */}
+    //             <Text style={{ fontFamily: "Lobster-Regular", fontSize: 25, fontWeight: '500' }}>
+
+    //             </Text>
+    //             <Feather name="navigation" style={{ fontSize: 24 }} />
+    //         </View>
+
+    //         <ScrollView>
+    //             <Post />
+    //         </ScrollView>
+
+    //     </View>
+    // );
 };
 
 const HomeScreenStack = () => {
@@ -84,7 +176,7 @@ const HomeScreenStack = () => {
             <Stack.Screen
                 name="MyOrder"
                 component={MyOrder}
-                
+
                 options={{
                     headerTitleAlign: 'left',
                     headerTintColor: '#fff',
