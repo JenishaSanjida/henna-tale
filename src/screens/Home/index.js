@@ -10,6 +10,7 @@ import MyOrder from '../MyOrders';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 import { Profile } from '../Profile';
+import Confirm from '../NewAppointment/Confirm';
 
 const Stack = createNativeStackNavigator();
 
@@ -178,6 +179,13 @@ const HomeScreenStack = () => {
             <Stack.Screen
                 name="ProfileScreen"
                 component={Profile}
+            />
+            <Stack.Screen
+                name="ConfirmScreen"
+                component={Confirm}
+                options={{
+                    title: "Confirm Appointment"
+                }}
             />
             <Stack.Screen
                 name="MyOrder"

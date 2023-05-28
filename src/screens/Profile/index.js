@@ -59,7 +59,7 @@ export const Profile = ({ route, navigation }) => {
         console.log(value);
         console.log(date);
         setSelectedTime(value);
-        navigation.navigate('Confirm', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
+        navigation.navigate('ConfirmScreen', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
 
     }
 
@@ -125,7 +125,7 @@ const ProfileScreenStack = () => {
                 options={{ title: 'HennaTales' }}
             />
             <Stack.Screen
-                name="Confirm"
+                name="Confirma"
                 component={Confirm}
             // options={{
             //     headerStyle: {
