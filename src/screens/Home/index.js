@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MyOrder from '../MyOrders';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
+import { Profile } from '../Profile';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +41,7 @@ const UserCard = ({ avatar, picture, name, onPressViewProfile, onPressBookAppoin
     </View>
 );
 
-const Home = () => {
+const Home = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([
@@ -66,6 +67,7 @@ const Home = () => {
 
     const handleBookAppointment = (user) => {
         console.log('Book Appointment:', user.name);
+        navigation.navigate('ProfileScreen', { name: user.name, avatar: user.avatar });
         // Handle book appointment event
     };
 
@@ -172,6 +174,10 @@ const HomeScreenStack = () => {
                 name="Home"
                 component={Home}
                 options={{ title: 'HennaTales' }}
+            />
+            <Stack.Screen
+                name="ProfileScreen"
+                component={Profile}
             />
             <Stack.Screen
                 name="MyOrder"

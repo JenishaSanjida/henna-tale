@@ -37,7 +37,7 @@ export default function Confirm({ route, navigation }) {
     })
 
 
-    const { date, time } = route.params;
+    const { date, time, name, avatar } = route.params;
 
 
     // const navigation = useNavigation();
@@ -84,11 +84,11 @@ export default function Confirm({ route, navigation }) {
             <Container>
                 <Avatar
                     source={{
-                        uri: `https://randomuser.me/api/portraits/men/75.jpg`,
+                        uri: avatar,
                     }}
                 />
 
-                <Name>Jane Doe</Name>
+                <Name>{name}</Name>
                 <Time>{dateFormatted}</Time>
                 <Time>{time}</Time>
 

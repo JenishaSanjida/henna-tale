@@ -15,7 +15,29 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Stack = createNativeStackNavigator();
 
-const Profile = ({ navigation }) => {
+export const Profile = ({ route, navigation }) => {
+
+    console.log("navigation");
+    console.log(navigation);
+
+    navigation.setOptions({
+        title: route?.params?.name,
+        headerStyle: {
+            backgroundColor: '#fff',
+        },
+        headerTitleStyle: {
+            // fontFamily: 'Ubuntu-Bold',
+            color: '#000',
+        },
+        headerTitleAlign: 'left',
+        headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Icon name="chevron-left" size={22} color="#000" />
+            </TouchableOpacity>
+
+        ),
+        headerLeftContainerStyle: { marginLeft: 10 },
+    })
 
     const [date, setDate] = useState(new Date());
     const [hours, setHours] = useState([
@@ -37,7 +59,7 @@ const Profile = ({ navigation }) => {
         console.log(value);
         console.log(date);
         setSelectedTime(value);
-        navigation.navigate('Confirm', { date: date, time: value });
+        navigation.navigate('Confirm', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
 
     }
 
@@ -105,23 +127,23 @@ const ProfileScreenStack = () => {
             <Stack.Screen
                 name="Confirm"
                 component={Confirm}
-                // options={{
-                //     headerStyle: {
-                //         backgroundColor: '#fff',
-                //     },
-                //     headerTitleStyle: {
-                //         // fontFamily: 'Ubuntu-Bold',
-                //         color: '#000',
-                //     },
-                //     headerTitleAlign: 'left',
-                //     headerLeft: () => (
-                //         <TouchableOpacity onPress={() => navigation.pop()}>
-                //             <Icon name="chevron-left" size={22} color="#000" />
-                //         </TouchableOpacity>
+            // options={{
+            //     headerStyle: {
+            //         backgroundColor: '#fff',
+            //     },
+            //     headerTitleStyle: {
+            //         // fontFamily: 'Ubuntu-Bold',
+            //         color: '#000',
+            //     },
+            //     headerTitleAlign: 'left',
+            //     headerLeft: () => (
+            //         <TouchableOpacity onPress={() => navigation.pop()}>
+            //             <Icon name="chevron-left" size={22} color="#000" />
+            //         </TouchableOpacity>
 
-                //     ),
-                //     headerLeftContainerStyle: { marginLeft: 10 },
-                // }}
+            //     ),
+            //     headerLeftContainerStyle: { marginLeft: 10 },
+            // }}
             />
         </Stack.Navigator>
     );
