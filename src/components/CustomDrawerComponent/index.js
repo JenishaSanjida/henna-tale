@@ -50,7 +50,9 @@ const CustomDrawerContent = ({ navigation }) => {
                     <DrawerItem
                         label="My Profile"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
-                        onPress={() => navigation.push('ProfileScreenStack')}
+                        onPress={() => {
+                            console.log("Go to Profile")
+                        }}
                         icon={({ color, size }) => (
                             <Icon name="map" color={'#000'} size={24} />
                         )}

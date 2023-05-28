@@ -84,7 +84,7 @@ export default function Confirm({ route, navigation }) {
             <Container>
                 <Avatar
                     source={{
-                        uri: avatar,
+                        uri: avatar ? avatar : `https://randomuser.me/api/portraits/men/75.jpg`,
                     }}
                 />
 
