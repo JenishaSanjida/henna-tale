@@ -125,7 +125,7 @@ const ProfileScreenStack = () => {
                 options={{ title: 'HennaTales' }}
             />
             <Stack.Screen
-                name="Confirma"
+                name="Confirm"
                 component={Confirm}
             // options={{
             //     headerStyle: {

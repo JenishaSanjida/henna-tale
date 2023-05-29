@@ -51,7 +51,7 @@ export const styles = {
         marginRight: 10,
     },
     separator: {
-        height: 1,
+        height: 3,
         backgroundColor: '#E0E0E0',
     },
     loadingContainer: {

@@ -33,7 +33,7 @@ const CustomDrawerContent = ({ navigation }) => {
                 <View style={styles.avatarContainer}>
                     <View style={styles.titleContainer}>
                         <Text style={[styles.title, { color: '#000' }]}>
-                            Karim
+                            John Doe
                         </Text>
                         <Text style={[styles.caption, { color: '#000' }]}>
                             Change the description here
@@ -52,6 +52,7 @@ const CustomDrawerContent = ({ navigation }) => {
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
                         onPress={() => {
                             console.log("Go to Profile")
+                            navigation.navigate('Designer');
                         }}
                         icon={({ color, size }) => (
                             <Icon name="map" color={'#000'} size={24} />

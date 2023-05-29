@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
 import { Profile } from '../Profile';
 import Confirm from '../NewAppointment/Confirm';
+import DesignerProfile from '../DesignerProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -63,6 +64,7 @@ const Home = ({ navigation }) => {
 
     const handleViewProfile = (user) => {
         console.log('View Profile:', user.name);
+        navigation.navigate('Designer', { name: user.name, avatar: user.avatar });
         // Handle view profile event
     };
 
@@ -201,6 +203,21 @@ const HomeScreenStack = () => {
                     ),
                     // headerShown: true,
 
+                }}
+            />
+            <Stack.Screen
+                name="Designer"
+                component={DesignerProfile}
+                options={{
+                    title: "Designer",
+                    headerTitleAlign: 'left',
+                    headerTintColor: '#fff',
+                    headerLeft: () => (
+                        <TouchableOpacity onPress={goBack} style={{ marginLeft: 0 }}>
+                            <Icon name="arrow-back" size={30} color="#000" />
+                        </TouchableOpacity>
+                    ),
+                    // headerSh
                 }}
             />
         </Stack.Navigator>
