@@ -9,9 +9,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MyOrder from '../MyOrders';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from './styles';
-import { Profile } from '../Profile';
 import Confirm from '../NewAppointment/Confirm';
 import DesignerProfile from '../DesignerProfile';
+import SelectDateTime from '../NewAppointment/SelectDateTime';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,7 +70,7 @@ const Home = ({ navigation }) => {
 
     const handleBookAppointment = (user) => {
         console.log('Book Appointment:', user.name);
-        navigation.navigate('ProfileScreen', { name: user.name, avatar: user.avatar });
+        navigation.navigate('SelectDateTIme', { name: user.name, avatar: user.avatar });
         // Handle book appointment event
     };
 
@@ -179,8 +179,8 @@ const HomeScreenStack = () => {
                 options={{ title: 'HennaTales' }}
             />
             <Stack.Screen
-                name="ProfileScreen"
-                component={Profile}
+                name="SelectDateTIme"
+                component={SelectDateTime}
             />
             <Stack.Screen
                 name="ConfirmScreen"

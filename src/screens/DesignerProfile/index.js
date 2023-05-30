@@ -50,8 +50,8 @@ const DesignerProfile = ({ route, navigation }) => {
             <Text style={styles.address}>{user.address}</Text>
             <View style={styles.infoContainer}>
                 <Text style={styles.infoText}>{user.photos.length} Photos</Text>
-                <Text style={styles.infoText}>{user.followers} Followers</Text>
-                <Text style={styles.infoText}>{user.following} Following</Text>
+                {/* <Text style={styles.infoText}>{user.followers} Followers</Text> */}
+                {/* <Text style={styles.infoText}>{user.following} Following</Text> */}
             </View>
             <View style={styles.photoContainer}>
                 <FlatList

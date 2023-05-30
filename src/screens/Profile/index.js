@@ -15,80 +15,12 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const Stack = createNativeStackNavigator();
 
-export const Profile = ({ route, navigation }) => {
-
-    console.log("navigation");
-    console.log(navigation);
-
-    navigation.setOptions({
-        title: route?.params?.name,
-        headerStyle: {
-            backgroundColor: '#fff',
-        },
-        headerTitleStyle: {
-            // fontFamily: 'Ubuntu-Bold',
-            color: '#000',
-        },
-        headerTitleAlign: 'left',
-        headerLeft: () => (
-            <TouchableOpacity onPress={() => navigation.goBack()}>
-                <Icon name="chevron-left" size={22} color="#000" />
-            </TouchableOpacity>
-
-        ),
-        headerLeftContainerStyle: { marginLeft: 10 },
-    })
-
-    const [date, setDate] = useState(new Date());
-    const [hours, setHours] = useState([
-        {
-            time: "9:00",
-            available: true,
-            value: "9:00"
-        },
-        {
-            time: "11:00",
-            available: false,
-            value: "11:00"
-        }
-    ]);
-    const [selectedTime, setSelectedTime] = useState("");
-
-    async function handleSelectHour({ value }) {
-        console.log("date and time value");
-        console.log(value);
-        console.log(date);
-        setSelectedTime(value);
-        navigation.navigate('ConfirmScreen', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
-
-    }
-
-    const formatDate = stringDate => {
-        return format(parseISO(stringDate), 'HH:mm');
-    };
+export const Profile = () => {
 
     return (
-        // <View>
-        //     <Text>Profile Screen</Text>
-        // </View>
-
-        <Background>
-            <Container>
-                <DateInput date={date} onChange={setDate} />
-
-                <HourList
-                    data={hours}
-                    keyExtractor={item => String(item.time)}
-                    renderItem={({ item }) => (
-                        <Hour
-                            enabled={item.available}
-                            onPress={() => handleSelectHour(item)}>
-                            <Title>{item.value}</Title>
-                        </Hour>
-                    )}
-                />
-            </Container>
-        </Background>
+        <View>
+            <Text>Profile Screen</Text>
+        </View>
 
     )
 }
