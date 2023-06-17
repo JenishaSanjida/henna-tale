@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import PropTypes from "prop-types";
 import AppIntroSlider from "react-native-app-intro-slider";
@@ -7,7 +7,7 @@ import walkthroughAppConfig from "../../constants/walkthroughAppConfig";
 import Login from "../Login";
 
 // import all the components we are going to use
-import { SafeAreaView, View, Image, Text, Button } from "react-native";
+import { SafeAreaView, View, Image, Text, Button, StatusBar } from "react-native";
 //import AppIntroSlider to use it
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MyDrawer from "../../components/DrawerNavigator";
@@ -16,6 +16,10 @@ import MyDrawer from "../../components/DrawerNavigator";
 const Walkthrough = () => {
   const [showRealApp, setShowRealApp] = useState(false);
   const [slides, setSlides] = useState(walkthroughAppConfig);
+
+  useEffect(() => {
+    StatusBar.setHidden(true);
+  }, []);
 
   const onDone = () => {
     setShowRealApp(true);

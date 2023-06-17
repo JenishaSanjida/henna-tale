@@ -52,7 +52,7 @@ const CustomDrawerContent = ({ navigation }) => {
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
                         onPress={() => {
                             console.log("Go to Profile")
-                            navigation.navigate('Designer');
+                            // navigation.navigate('Designer');
                         }}
                         icon={({ color, size }) => (
                             <Icon name="map" color={'#000'} size={24} />
