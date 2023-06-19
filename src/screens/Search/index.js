@@ -5,8 +5,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UserList from '../../constants/userList';
 import { Avatar, ListItem, SearchBar } from 'react-native-elements';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { BASE_URL_PLACE } from '../../constants/apiConfig';
+import { BASE_URL, BASE_URL_PLACE } from '../../constants/apiConfig';
 import { Picker } from '@react-native-picker/picker';
+import { useDispatch, useSelector } from 'react-redux';
+import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
+
 
 // import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -15,14 +18,18 @@ const Stack = createNativeStackNavigator();
 
 const Search = () => {
 
+
+    const dispatch = useDispatch();
+    const { isLoading, data, error } = useSelector(state => state.api);
+
     const [users, setUsers] = useState(UserList);
-    const [data, setData] = useState(UserList);
+    const [userData, setUserData] = useState(UserList);
     const [search, setSearch] = useState('');
 
     const handleSearch = text => {
 
         setSearch(text);
-        const filteredList = data.filter(item =>
+        const filteredList = userData.filter(item =>
             item.name.toLowerCase().includes(text.toLowerCase()),
         );
         setUsers(filteredList);
@@ -57,13 +64,28 @@ const Search = () => {
         }
     }, [dropdown2Value]);
 
+    useEffect(() => {
+        console.log("API Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        console.log(data);
+
+
+        if (data?.data?.length > 0 && dropdown2Options.length > 0) {
+            setDropdown3Options(data?.data);
+        }
+
+        else if (data?.data?.length > 0 && dropdown1Options.length > 0) {
+            setDropdown2Options(data?.data);
+        }
+
+        else if (data?.data?.length > 0) {
+            setDropdown1Options(data?.data);
+        }
+    }, [data]);
+
     const fetchDropdown1Options = async () => {
         try {
-            const response = await fetch(`${BASE_URL_PLACE}/divisions`);
-            const data = await response.json();
-            console.log("data");
-            console.log(data);
-            setDropdown1Options(data?.data);
+            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/divisions`));
+
         } catch (error) {
             console.error('Error fetching dropdown 1 options:', error);
         }
@@ -71,11 +93,13 @@ const Search = () => {
 
     const fetchDropdown2Options = async () => {
         try {
-            const response = await fetch(
-                `${BASE_URL_PLACE + division}`
-            );
-            const data = await response.json();
-            setDropdown2Options(data?.data);
+            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/${division}`));
+
+            // const response = await fetch(
+            //     `${BASE_URL_PLACE + division}`
+            // );
+            // const data = await response.json();
+            // setDropdown2Options(data?.data);
         } catch (error) {
             console.error('Error fetching dropdown 2 options:', error);
         }
@@ -83,11 +107,14 @@ const Search = () => {
 
     const fetchDropdown3Options = async () => {
         try {
-            const response = await fetch(
-                `${BASE_URL_PLACE + division + "/" + dropdown2Value}`
-            );
-            const data = await response.json();
-            setDropdown3Options(data?.data);
+
+            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/${division}/${dropdown2Value}`));
+
+            // const response = await fetch(
+            //     `${BASE_URL_PLACE + division + "/" + dropdown2Value}`
+            // );
+            // const data = await response.json();
+            // setDropdown3Options(data?.data);
         } catch (error) {
             console.error('Error fetching dropdown 3 options:', error);
         }
