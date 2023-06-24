@@ -52,6 +52,8 @@ const Search = () => {
     }, []);
 
     useEffect(() => {
+        console.log("division");
+        console.log(division);
         if (division !== '') {
             fetchDropdown2Options();
             setDropdown3Options([]);
@@ -69,15 +71,15 @@ const Search = () => {
         console.log(data);
 
 
-        if (data?.data?.length > 0 && dropdown2Options.length > 0) {
+        if (data?.data?.length > 0 && data?.endpoint == 'by-district') {
             setDropdown3Options(data?.data);
         }
 
-        else if (data?.data?.length > 0 && dropdown1Options.length > 0) {
+        else if (data?.data?.length > 0 && data?.endpoint == 'by-division') {
             setDropdown2Options(data?.data);
         }
 
-        else if (data?.data?.length > 0) {
+        else if (data?.data?.length > 0 && data?.endpoint == 'all-places') {
             setDropdown1Options(data?.data);
         }
     }, [data]);
