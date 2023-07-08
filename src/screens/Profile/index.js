@@ -11,11 +11,14 @@ import Confirm from '../NewAppointment/Confirm';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Input, Avatar, Button } from 'react-native-elements';
+import { useSelector } from 'react-redux';
 
 
 const Stack = createNativeStackNavigator();
 
 export const Profile = () => {
+
+    const { loggedInUserDetail } = useSelector(state => state.user);
 
     const [schedule, setSchedule] = useState({
         dayOfWeek: 'Tuesday',
@@ -83,12 +86,14 @@ export const Profile = () => {
             <View style={styles.profileContainer}>
                 <Avatar
                     rounded
-                    source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
+                    source={{
+                        uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+                    }}
                     size="large"
                 />
                 <View style={styles.profileInfo}>
-                    <Text style={styles.profileName}>John Doe</Text>
-                    <Text style={styles.profileAddress}>123 Main St, New York, NY</Text>
+                    <Text style={styles.profileName}>{loggedInUserDetail?.name}</Text>
+                    <Text style={styles.profileAddress}>{loggedInUserDetail?.thana}, {loggedInUserDetail?.district}, {loggedInUserDetail?.division}</Text>
                 </View>
             </View>
             <View style={styles.section}>

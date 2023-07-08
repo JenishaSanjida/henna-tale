@@ -44,9 +44,6 @@ export default function Registration() {
       thana: selectedThana // Provide the thana value here
     };
 
-    console.log("registrationData");
-    console.log(registrationData);
-
     // Make an API call to store the registration data
     fetch(BASE_URL + '/user/save', {
       method: 'POST',

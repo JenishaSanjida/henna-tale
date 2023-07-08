@@ -5,9 +5,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar, Divider } from 'react-native-paper';
 
 import { styles } from './styles';
+import { useSelector } from 'react-redux';
 
 
 const CustomDrawerContent = ({ navigation }) => {
+
+    const { loggedInUserDetail } = useSelector(state => state.user);
+
 
     return (
         <View
@@ -26,17 +30,17 @@ const CustomDrawerContent = ({ navigation }) => {
                     <Avatar.Image
                         size={50}
                         source={{
-                            uri: 'https://randomuser.me/api/portraits/men/75.jpg',
+                            uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
                         }}
                     />
                 </View>
                 <View style={styles.avatarContainer}>
                     <View style={styles.titleContainer}>
                         <Text style={[styles.title, { color: '#000' }]}>
-                            John Doe
+                            {loggedInUserDetail?.name}
                         </Text>
                         <Text style={[styles.caption, { color: '#000' }]}>
-                            Change the description here
+                            {loggedInUserDetail?.email}
                         </Text>
                     </View>
                 </View>

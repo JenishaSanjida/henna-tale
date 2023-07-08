@@ -3,10 +3,14 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, ToastAndroid } fro
 import { styles } from './styles';
 import MyDrawer from '../../components/DrawerNavigator';
 import Registration from '../Registration';
+import { setAccessToken, setLoggedInUserDetail } from '../../store/reducers/userSlice';
+import { useDispatch } from 'react-redux';
+import { BASE_URL } from '../../constants/apiConfig';
 
 export default function Login() {
 
-  Registration
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,9 +25,9 @@ export default function Login() {
   //   ToastAndroid.show('Invalid email or password', ToastAndroid.SHORT);
   // };
 
-  const showToastWithGravity = () => {
+  const showToastWithGravity = (message) => {
     ToastAndroid.showWithGravity(
-      'Invalid email or password',
+      message,
       ToastAndroid.LONG,
       ToastAndroid.CENTER,
     );
@@ -31,24 +35,55 @@ export default function Login() {
 
   const handleLogin = () => {
     console.log("login button clicked...");
-    if (email == 'admin@gmail.com' && password == '12345') {
-      setIsLoggedIn(true);
-    }
-    else {
-      showToastWithGravity();
-    }
+
+    // Prepare the registration data
+    const loginData = {
+      email: email,
+      password: password
+    };
+
+    // Make an API call to the login
+    fetch(BASE_URL + '/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(loginData)
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle the API response here
+        console.log('Login successful', data);
+
+        if (data?.error) {
+          showToastWithGravity('Invalid email or password');
+        }
+        else {
+          // Perform any necessary actions after successful registration
+          showToastWithGravity('Login successful');
+
+          dispatch(setLoggedInUserDetail(data?.user));
+          dispatch(setAccessToken(data?.token));
+
+          setIsLoggedIn(true);
+        }
+
+      })
+      .catch(error => {
+        console.error('Login failed', error);
+        showToastWithGravity('Something went wrong!');
+        // Handle the error case
+      });
+
+    // if (email == 'admin@gmail.com' && password == '12345') {
+    //   setIsLoggedIn(true);
+    // }
+    // else {
+    //   showToastWithGravity('Invalid email or password');
+    // }
 
     // Add your login logic here
   };
-
-  const handleRegister = () => {
-    // Handle registration functionality here
-    setCurrentScreen(currentScreen === 'Login' ? 'Register' : 'Login');
-  };
-
-  // const toggleRegistration = () => {
-  //   setShowRegistration(!showRegistration);
-  // };
 
 
   return (
