@@ -34,4 +34,10 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  pickerContainer: {
+    marginBottom: 20,
+  },
+  picker: {
+    width: 330
+  }
 });          

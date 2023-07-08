@@ -9,6 +9,7 @@ import { BASE_URL, BASE_URL_PLACE } from '../../constants/apiConfig';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
+import PlaceDropdowns from '../../components/PlaceDropdowns';
 
 
 // import Icon from 'react-native-vector-icons/Ionicons';
@@ -18,9 +19,7 @@ const Stack = createNativeStackNavigator();
 
 const Search = () => {
 
-
-    const dispatch = useDispatch();
-    const { isLoading, data, error } = useSelector(state => state.api);
+    const { selectedDivision, selectedDistrict, selectedThana } = useSelector(state => state.place);
 
     const [users, setUsers] = useState(UserList);
     const [userData, setUserData] = useState(UserList);
@@ -39,88 +38,88 @@ const Search = () => {
      * All actions for handling division, district and thana selection
      */
 
-    const [division, setDivision] = useState('');
-    const [dropdown2Value, setDropdown2Value] = useState('');
-    const [dropdown3Value, setDropdown3Value] = useState('');
+    // const [division, setDivision] = useState('');
+    // const [dropdown2Value, setDropdown2Value] = useState('');
+    // const [dropdown3Value, setDropdown3Value] = useState('');
 
-    const [dropdown1Options, setDropdown1Options] = useState([]);
-    const [dropdown2Options, setDropdown2Options] = useState([]);
-    const [dropdown3Options, setDropdown3Options] = useState([]);
+    // const [dropdown1Options, setDropdown1Options] = useState([]);
+    // const [dropdown2Options, setDropdown2Options] = useState([]);
+    // const [dropdown3Options, setDropdown3Options] = useState([]);
 
-    useEffect(() => {
-        fetchDropdown1Options();
-    }, []);
+    // useEffect(() => {
+    //     fetchDropdown1Options();
+    // }, []);
 
-    useEffect(() => {
-        console.log("division");
-        console.log(division);
-        if (division !== '') {
-            fetchDropdown2Options();
-            setDropdown3Options([]);
-        }
-    }, [division]);
+    // useEffect(() => {
+    //     console.log("division");
+    //     console.log(division);
+    //     if (division !== '') {
+    //         fetchDropdown2Options();
+    //         setDropdown3Options([]);
+    //     }
+    // }, [division]);
 
-    useEffect(() => {
-        if (dropdown2Value !== '') {
-            fetchDropdown3Options();
-        }
-    }, [dropdown2Value]);
+    // useEffect(() => {
+    //     if (dropdown2Value !== '') {
+    //         fetchDropdown3Options();
+    //     }
+    // }, [dropdown2Value]);
 
-    useEffect(() => {
-        console.log("API Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        console.log(data);
+    // useEffect(() => {
+    //     console.log("API Data >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    //     console.log(data);
 
 
-        if (data?.data?.length > 0 && data?.endpoint == 'by-district') {
-            setDropdown3Options(data?.data);
-        }
+    //     if (data?.data?.length > 0 && data?.endpoint == 'by-district') {
+    //         setDropdown3Options(data?.data);
+    //     }
 
-        else if (data?.data?.length > 0 && data?.endpoint == 'by-division') {
-            setDropdown2Options(data?.data);
-        }
+    //     else if (data?.data?.length > 0 && data?.endpoint == 'by-division') {
+    //         setDropdown2Options(data?.data);
+    //     }
 
-        else if (data?.data?.length > 0 && data?.endpoint == 'all-places') {
-            setDropdown1Options(data?.data);
-        }
-    }, [data]);
+    //     else if (data?.data?.length > 0 && data?.endpoint == 'all-places') {
+    //         setDropdown1Options(data?.data);
+    //     }
+    // }, [data]);
 
-    const fetchDropdown1Options = async () => {
-        try {
-            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/divisions`));
+    // const fetchDropdown1Options = async () => {
+    //     try {
+    //         dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/divisions`));
 
-        } catch (error) {
-            console.error('Error fetching dropdown 1 options:', error);
-        }
-    };
+    //     } catch (error) {
+    //         console.error('Error fetching dropdown 1 options:', error);
+    //     }
+    // };
 
-    const fetchDropdown2Options = async () => {
-        try {
-            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/${division}`));
+    // const fetchDropdown2Options = async () => {
+    //     try {
+    //         dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/${division}`));
 
-            // const response = await fetch(
-            //     `${BASE_URL_PLACE + division}`
-            // );
-            // const data = await response.json();
-            // setDropdown2Options(data?.data);
-        } catch (error) {
-            console.error('Error fetching dropdown 2 options:', error);
-        }
-    };
+    //         // const response = await fetch(
+    //         //     `${BASE_URL_PLACE + division}`
+    //         // );
+    //         // const data = await response.json();
+    //         // setDropdown2Options(data?.data);
+    //     } catch (error) {
+    //         console.error('Error fetching dropdown 2 options:', error);
+    //     }
+    // };
 
-    const fetchDropdown3Options = async () => {
-        try {
+    // const fetchDropdown3Options = async () => {
+    //     try {
 
-            dispatch(createDynamicAsyncThunk(`${BASE_URL}/api/place/${division}/${dropdown2Value}`));
+    //         dispatch(createDynamicAsyncThunk(`${BASE_URL}/place/${division}/${dropdown2Value}`));
 
-            // const response = await fetch(
-            //     `${BASE_URL_PLACE + division + "/" + dropdown2Value}`
-            // );
-            // const data = await response.json();
-            // setDropdown3Options(data?.data);
-        } catch (error) {
-            console.error('Error fetching dropdown 3 options:', error);
-        }
-    };
+    //         // const response = await fetch(
+    //         //     `${BASE_URL_PLACE + division + "/" + dropdown2Value}`
+    //         // );
+    //         // const data = await response.json();
+    //         // setDropdown3Options(data?.data);
+    //     } catch (error) {
+    //         console.error('Error fetching dropdown 3 options:', error);
+    //     }
+    // };
 
 
 
@@ -148,7 +147,7 @@ const Search = () => {
             /> */}
 
             {/* Dropdown for location based search i.e division, district, thana */}
-            <View>
+            {/* <View>
                 <Picker
                     selectedValue={division}
                     onValueChange={(value) => setDivision(value)}
@@ -193,7 +192,9 @@ const Search = () => {
                         />
                     ))}
                 </Picker>
-            </View>
+            </View> */}
+            <PlaceDropdowns />
+
             {/* Dropdown for location based search i.e division, district, thana */}
             <ScrollView>
                 {users.map((item, index) => (
