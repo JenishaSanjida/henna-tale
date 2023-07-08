@@ -75,8 +75,8 @@ const Walkthrough = () => {
   return (
     <>
       {showRealApp ? (
-        <MyDrawer />
-        // <Login />
+        // <MyDrawer />
+        <Login />
         // <SafeAreaView style={styles.container}>
         //   <View style={styles.container}>
         //     <Text style={styles.titleStyle}>
