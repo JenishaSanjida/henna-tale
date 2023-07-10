@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StatusBar, ScrollView, Image, FlatList, ActivityIndicator, Dimensions } from 'react-native'
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Feather from "react-native-vector-icons/Feather";
@@ -12,6 +12,11 @@ import { styles } from './styles';
 import Confirm from '../NewAppointment/Confirm';
 import DesignerProfile from '../DesignerProfile';
 import SelectDateTime from '../NewAppointment/SelectDateTime';
+import { BASE_URL } from '../../constants/apiConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
+import { setPaginationDetails, setUserList } from '../../store/reducers/userSlice';
+import { dummyAvatar, dummyPicture } from '../../constants/others';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,21 +51,61 @@ const UserCard = ({ avatar, picture, name, onPressViewProfile, onPressBookAppoin
 const Home = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
-    const [users, setUsers] = useState([
-        {
-            id: 1,
-            avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
-            picture: 'https://picsum.photos/200/300?random',
-            name: 'John Doe',
-        },
-        {
-            id: 2,
-            avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
-            picture: 'https://picsum.photos/200/300?random',
-            name: 'Jane Smith',
-        },
-        // Add more users as needed
-    ]);
+    const [pagination, setPagination] = useState(null);
+    const [users, setUsers] = useState([]);
+
+    const { accessToken, userList, paginationDetails } = useSelector(state => state.user);
+
+    const dispatch = useDispatch();
+
+    // const [users, setUsers] = useState([
+    //     {
+    //         id: 1,
+    //         avatar: 'https://randomuser.me/api/portraits/men/75.jpg',
+    //         picture: 'https://picsum.photos/200/300?random',
+    //         name: 'John Doe',
+    //     },
+    //     {
+    //         id: 2,
+    //         avatar: 'https://randomuser.me/api/portraits/women/75.jpg',
+    //         picture: 'https://picsum.photos/200/300?random',
+    //         name: 'Jane Smith',
+    //     },
+    //     // Add more users as needed
+    // ]);
+
+    // getting designer list
+    useEffect(() => {
+
+        if (accessToken) {
+
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    Authorization: `${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            };
+            // Make an API call to store the userlist data
+            fetch(`${BASE_URL}/user/list?page=1&size=10`, requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the API response here
+                    console.log('Userlist successful', data);
+                    // Perform any necessary actions after getting user list
+                    dispatch(setUserList(data?.data));
+                    dispatch(setPaginationDetails(data?.meta));
+                    setUsers(data?.data);
+                    setPagination(data?.meta);
+
+                })
+                .catch(error => {
+                    console.error('Userlist failed', error);
+                    // Handle the error case
+                });
+        }
+
+    }, []);
 
     const handleViewProfile = (user) => {
         console.log('View Profile:', user.name);
@@ -76,9 +121,9 @@ const Home = ({ navigation }) => {
 
     const renderUserCard = ({ item }) => (
         <UserCard
-            avatar={item.avatar}
-            picture={item.picture}
-            name={item.name}
+            avatar={item?.avatar ? item?.avatar : dummyAvatar}
+            picture={item?.picture ? item?.picture : dummyPicture}
+            name={item?.name}
             onPressViewProfile={() => handleViewProfile(item)}
             onPressBookAppointment={() => handleBookAppointment(item)}
         />
@@ -95,17 +140,48 @@ const Home = ({ navigation }) => {
         );
     };
 
+    const loadMoreUsers = async () => {
+        if (loading || !pagination || !pagination.nextPage) {
+            return;
+        }
+
+        setLoading(true);
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                Authorization: `${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        };
+
+        try {
+            const response = await fetch(`${BASE_URL}/user/list?page=${pagination.nextPage}&size=10`, requestOptions);
+            const data = await response.json();
+            dispatch(setUserList(data?.data));
+            dispatch(setPaginationDetails(data?.meta));
+            setUsers((prevUsers) => [...prevUsers, ...data?.data]);
+            setPagination(data?.meta);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+        setLoading(false);
+    };
+
+    const handleEndReached = () => {
+        loadMoreUsers();
+    };
+
+
     return (
         <FlatList
             data={users}
             renderItem={renderUserCard}
             ItemSeparatorComponent={renderItemSeparator}
             ListFooterComponent={renderFooter}
-            keyExtractor={(item) => item.id.toString()}
-            onEndReached={() => {
-                // Fetch more users or handle lazy loading
-                setLoading(true);
-            }}
+            keyExtractor={(item) => item?._id.toString()}
+            onEndReached={handleEndReached}
             onEndReachedThreshold={0.5} // Adjust as needed
         />
     );

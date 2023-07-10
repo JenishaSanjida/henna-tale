@@ -3,8 +3,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 // Create an async thunk with a custom URL
 export const createDynamicAsyncThunk = createAsyncThunk(
     'api/fetchDynamicData',
-    async (url) => {
-        const response = await fetch(url);
+    async (url, options = {}) => {
+        const response = await fetch(url, options);
         const data = await response.json();
         return data;
     }

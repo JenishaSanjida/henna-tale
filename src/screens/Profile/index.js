@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { Input, Avatar, Button } from 'react-native-elements';
 import { useSelector } from 'react-redux';
+import { dummyAvatar } from '../../constants/others';
 
 
 const Stack = createNativeStackNavigator();
@@ -87,7 +88,7 @@ export const Profile = () => {
                 <Avatar
                     rounded
                     source={{
-                        uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+                        uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : dummyAvatar,
                     }}
                     size="large"
                 />
