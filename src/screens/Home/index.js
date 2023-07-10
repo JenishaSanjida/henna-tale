@@ -109,13 +109,13 @@ const Home = ({ navigation }) => {
 
     const handleViewProfile = (user) => {
         console.log('View Profile:', user.name);
-        navigation.navigate('Designer', { name: user.name, avatar: user.avatar });
+        navigation.navigate('Designer', { name: user.name, avatar: user?.avatar ? user?.avatar : dummyAvatar, userDetail: user });
         // Handle view profile event
     };
 
     const handleBookAppointment = (user) => {
         console.log('Book Appointment:', user.name);
-        navigation.navigate('SelectDateTIme', { name: user.name, avatar: user.avatar });
+        navigation.navigate('SelectDateTIme', { name: user.name, avatar: user?.avatar ? user?.avatar : dummyAvatar, userDetail: user });
         // Handle book appointment event
     };
 

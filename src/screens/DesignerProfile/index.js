@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 
 const DesignerProfile = ({ route, navigation }) => {
-    const { name, avatar } = route.params;
+    const { name, avatar, userDetail } = route.params;
 
     navigation.setOptions({
         title: name
@@ -12,7 +12,7 @@ const DesignerProfile = ({ route, navigation }) => {
         coverPhoto: 'https://st2.depositphotos.com/4238279/11747/i/600/depositphotos_117475622-stock-photo-dramatic-sunset-at-the-beach.jpg',
         avatar: avatar,
         name: name,
-        address: '123 Main Street, City, Country',
+        address: userDetail?.thana + ', ' + userDetail?.district + ', ' + userDetail?.division,
         photos: [
             'https://picsum.photos/200/300?random',
             'https://picsum.photos/200/300?random',
