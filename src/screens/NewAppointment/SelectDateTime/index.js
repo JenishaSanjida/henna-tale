@@ -45,6 +45,11 @@ const SelectDateTime = ({ route, navigation }) => {
             time: "11:00",
             available: false,
             value: "11:00"
+        },
+        {
+            time: "14:00",
+            available: true,
+            value: "14:00"
         }
     ]);
     const [selectedTime, setSelectedTime] = useState("");

@@ -28,27 +28,6 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  timeSlot: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: '#F1F1F1',
-    marginBottom: 10,
-    borderRadius: 8,
-  },
-  bookedTimeSlot: {
-    backgroundColor: '#FFC1C1',
-  },
-  timeSlotText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  timeSlotStatus: {
-    fontSize: 14,
-    color: 'gray',
-  },
   addTimeSlotContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -92,5 +71,14 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    width: '100%'
   },
 });
