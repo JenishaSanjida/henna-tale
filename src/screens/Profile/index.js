@@ -8,8 +8,7 @@ import { styles } from './styles';
 import { Title } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 import Confirm from '../NewAppointment/Confirm';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid, FlatList } from 'react-native';
 import { Input, Avatar, Button } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +16,8 @@ import { dummyAvatar } from '../../constants/others';
 import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { setLoggedInUserDetail } from '../../store/reducers/userSlice';
 import { Hour, HourList } from '../NewAppointment/SelectDateTime/styles';
+// import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,7 +26,10 @@ export const Profile = () => {
 
     const dispatch = useDispatch();
     const { loggedInUserDetail, accessToken } = useSelector(state => state.user);
-    // const { schedules, portfolioImages } = useSelector(state => state.profile);
+
+    const [showAllPhotos, setShowAllPhotos] = useState(false);
+    const maxVisiblePhotos = 6;
+    const [selectedImage, setSelectedImage] = useState(null);
 
     const [selectedDay, setSelectedDay] = useState('');
     const [newTimeSlot, setNewTimeSlot] = useState('');
@@ -93,9 +97,63 @@ export const Profile = () => {
         }
     };
 
-    const handleImageUpload = () => {
+    const handleImageUpload = async () => {
         // Implement your image upload logic here
         // dispatch(uploadImage(imageUri));
+        // Configure image picker options
+        const options = {
+            mediaType: 'photo',
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+
+        // You can also use as a promise without 'callback':
+        const response = await launchImageLibrary(options);
+
+        // Launch image picker
+        // ImagePicker.showImagePicker(options, async (response) => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+            console.log('Image picker error: ', response.errorMessage);
+        } else if (response.assets) {
+            // Dispatch the upload image action with the selected file
+            // dispatch(uploadImage(response));
+            console.log(response.assets)
+            setSelectedImage(response.assets[0]?.uri);
+            try {
+                const formData = new FormData();
+                formData.append('image', {
+                    uri: response.assets[0]?.uri,
+                    type: response.assets[0]?.type,
+                    name: response.assets[0].fileName,
+                });
+
+                const apiResponse = await fetch(`${BASE_URL}/users/${loggedInUserDetail._id}/portfolio/images`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                apiResponse.json().then(data => {
+
+                    if (data?.portfolio) {
+                        showToastWithGravity(data?.message);
+                        dispatch(setLoggedInUserDetail({
+                            ...loggedInUserDetail,
+                            portfolio: data?.portfolio,
+                        }))
+                    } else {
+                        showToastWithGravity(data.message)
+                    }
+
+                })
+
+            } catch (error) {
+                console.error('Image upload error:', error);
+                showToastWithGravity(error);
+            }
+        }
+        // });
     };
 
     const handleImageDelete = (imageId) => {
@@ -103,6 +161,14 @@ export const Profile = () => {
         console.log(imageId);
         // dispatch(deleteImage(imageId));
     };
+
+    const handleToggleShowAllPhotos = () => {
+        setShowAllPhotos(!showAllPhotos);
+    };
+
+    const renderPhotoItem = ({ item }) => (
+        <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.photoItem} />
+    );
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -147,7 +213,7 @@ export const Profile = () => {
                     <Input
                         value={newTimeSlot}
                         onChangeText={setNewTimeSlot}
-                        placeholder="Add new time slot, Example: 13:00"
+                        placeholder="Add time slot, e.g. 13:00"
                         containerStyle={styles.inputContainer}
                     />
                     <Button
@@ -173,189 +239,45 @@ export const Profile = () => {
                                 </Hour>
                             )}
                         />
-                        {/* <View style={styles.addTimeSlotContainer}>
-                            <Input
-                                value={newTimeSlot}
-                                onChangeText={setNewTimeSlot}
-                                placeholder="Add new time slot"
-                                containerStyle={styles.inputContainer}
-                            />
-                            <Button
-                                title="Add"
-                                onPress={() => addTimeSlot(schedule.dayOfWeek)}
-                                buttonStyle={styles.addButton}
-                            />
-                        </View> */}
                     </View>
                 ))}
             </View>
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Portfolio</Text>
                 <View style={styles.imageUploadContainer}>
-                    {loggedInUserDetail?.portfolio.designs.map((image, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={styles.portfolioImageContainer}
-                            onPress={() => handleImageDelete(image)}
-                        >
-                            <Image
-                                source={{ uri: `${FILE_BASE_URL}/${image}` }}
-                                style={styles.portfolioImage}
-                                resizeMode="cover"
-                            />
-                        </TouchableOpacity>
-                    ))}
                     <TouchableOpacity
                         style={styles.uploadButton}
                         onPress={handleImageUpload}
                     >
-                        <Icon name="file" size={20} color="#fff" />
+                        <FontAwesome name="file" style={{ fontSize: 24, color: 'white' }} />
                         <Text style={styles.uploadButtonText}>Upload Image</Text>
                     </TouchableOpacity>
+                </View>
+                <View>
+                    <FlatList
+                        data={showAllPhotos ? loggedInUserDetail?.portfolio?.designs : loggedInUserDetail?.portfolio?.designs.slice(0, maxVisiblePhotos)}
+                        renderItem={renderPhotoItem}
+                        keyExtractor={(item, index) => index.toString()}
+                        numColumns={3}
+                        contentContainerStyle={styles.photoGrid}
+                        ListFooterComponent={() =>
+                            loggedInUserDetail?.portfolio?.designs.length > maxVisiblePhotos && (
+                                <TouchableOpacity
+                                    style={styles.morePhotosButton}
+                                    onPress={handleToggleShowAllPhotos}
+                                >
+                                    <Text style={styles.morePhotosButtonText}>
+                                        {showAllPhotos ? 'Show Less' : 'Show More'}
+                                    </Text>
+                                </TouchableOpacity>
+                            )
+                        }
+                    />
                 </View>
             </View>
         </ScrollView>
     );
 };
-
-// export const Profile = () => {
-
-//     const { loggedInUserDetail } = useSelector(state => state.user);
-
-//     const [schedule, setSchedule] = useState({
-//         dayOfWeek: 'Tuesday',
-//         timeSlots: [
-//             {
-//                 time: '12:00 PM',
-//                 isBooked: false,
-//                 _id: '6476410a10f76bc6cdc7a1e7',
-//             },
-//         ],
-//         _id: '6476410a10f76bc6cdc7a1e6',
-//     });
-
-//     const [newTimeSlot, setNewTimeSlot] = useState('');
-//     const [portfolioImages, setPortfolioImages] = useState([
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random',
-//         'https://picsum.photos/200/300?random'
-//     ]);
-
-//     const addTimeSlot = () => {
-//         if (newTimeSlot.trim() !== '') {
-//             const updatedSchedule = { ...schedule };
-//             updatedSchedule.timeSlots.push({
-//                 time: newTimeSlot,
-//                 isBooked: false,
-//                 _id: generateUniqueId(),
-//             });
-//             setSchedule(updatedSchedule);
-//             setNewTimeSlot('');
-//         }
-//     };
-
-//     const updateBookingStatus = (timeSlotId) => {
-//         const updatedSchedule = { ...schedule };
-//         const timeSlotIndex = updatedSchedule.timeSlots.findIndex(
-//             (slot) => slot._id === timeSlotId
-//         );
-//         if (timeSlotIndex !== -1) {
-//             updatedSchedule.timeSlots[timeSlotIndex].isBooked = !updatedSchedule.timeSlots[
-//                 timeSlotIndex
-//             ].isBooked;
-//             setSchedule(updatedSchedule);
-//         }
-//     };
-
-//     const generateUniqueId = () => {
-//         return Math.random().toString(36).substr(2, 9);
-//     };
-
-//     const handleImageUpload = () => {
-//         console.log("image upload")
-//     };
-
-//     return (
-//         // <View>
-//         //     <Text>Profile Screen</Text>
-//         // </View>
-//         <ScrollView contentContainerStyle={styles.container}>
-//             <View style={styles.profileContainer}>
-//                 <Avatar
-//                     rounded
-//                     source={{
-//                         uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : dummyAvatar,
-//                     }}
-//                     size="large"
-//                 />
-//                 <View style={styles.profileInfo}>
-//                     <Text style={styles.profileName}>{loggedInUserDetail?.name}</Text>
-//                     <Text style={styles.profileAddress}>{loggedInUserDetail?.thana}, {loggedInUserDetail?.district}, {loggedInUserDetail?.division}</Text>
-//                 </View>
-//             </View>
-//             <View style={styles.section}>
-//                 <Text style={styles.sectionTitle}>Schedule</Text>
-//                 {schedule.timeSlots.map((slot) => (
-//                     <TouchableOpacity
-//                         key={slot._id}
-//                         onPress={() => updateBookingStatus(slot._id)}
-//                         style={[styles.timeSlot, slot.isBooked && styles.bookedTimeSlot]}
-//                     >
-//                         <Text style={styles.timeSlotText}>{slot.time}</Text>
-//                         <Text style={styles.timeSlotStatus}>
-//                             {slot.isBooked ? 'Booked' : 'Available'}
-//                         </Text>
-//                     </TouchableOpacity>
-//                 ))}
-//                 <View style={styles.addTimeSlotContainer}>
-//                     <Input
-//                         value={newTimeSlot}
-//                         onChangeText={setNewTimeSlot}
-//                         placeholder="Add new time slot"
-//                         containerStyle={styles.inputContainer}
-//                     />
-//                     <Button
-//                         title="Add"
-//                         onPress={addTimeSlot}
-//                         buttonStyle={styles.addButton}
-//                     />
-//                 </View>
-//             </View>
-//             <View style={styles.section}>
-//                 <Text style={styles.sectionTitle}>Portfolio</Text>
-//                 <View style={styles.imageUploadContainer}>
-//                     {portfolioImages.map((image, index) => (
-//                         <TouchableOpacity
-//                             key={index}
-//                             style={styles.portfolioImageContainer}
-//                             onPress={() => handleImagePress(image)}
-//                         >
-//                             <Image
-//                                 source={{ uri: image }}
-//                                 style={styles.portfolioImage}
-//                                 resizeMode="cover"
-//                             />
-//                         </TouchableOpacity>
-//                     ))}
-//                     <TouchableOpacity
-//                         style={styles.uploadButton}
-//                         onPress={handleImageUpload}
-//                     >
-//                         <Icon name="file" size={20} color="#fff" />
-//                         <Text style={styles.uploadButtonText}>Upload Image</Text>
-//                     </TouchableOpacity>
-//                 </View>
-//             </View>
-//         </ScrollView>
-
-
-//     )
-// }
 
 const ProfileScreenStack = () => {
 
