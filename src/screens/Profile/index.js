@@ -232,7 +232,7 @@ export const Profile = () => {
                             keyExtractor={item => String(item.time)}
                             renderItem={({ item }) => (
                                 <Hour
-                                    enabled={item.isBooked}
+                                    disabled={item.isBooked}
                                 // onPress={() => handleSelectHour(item)}
                                 >
                                     <Title>{item.time}</Title>

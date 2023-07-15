@@ -118,6 +118,7 @@ const Home = ({ navigation }) => {
 
     const handleBookAppointment = (user) => {
         console.log('Book Appointment:', user.name);
+        dispatch(setSelectedDesigner(user));
         navigation.navigate('SelectDateTIme', { name: user.name, avatar: user?.avatar ? user?.avatar : dummyAvatar, userDetail: user });
         // Handle book appointment event
     };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Background from '../../../components/Background';
@@ -8,9 +8,12 @@ import { Title, Button } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 // import Confirm from '../NewAppointment/Confirm';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useSelector } from 'react-redux';
 
 
 const SelectDateTime = ({ route, navigation }) => {
+
+    const { designerSchedules } = useSelector((state) => state.user);
 
     console.log("navigation");
     console.log(navigation);
@@ -35,29 +38,14 @@ const SelectDateTime = ({ route, navigation }) => {
     })
 
     const [date, setDate] = useState(new Date());
-    const [hours, setHours] = useState([
-        {
-            time: "9:00",
-            available: true,
-            value: "9:00"
-        },
-        {
-            time: "11:00",
-            available: false,
-            value: "11:00"
-        },
-        {
-            time: "14:00",
-            available: true,
-            value: "14:00"
-        }
-    ]);
+    const [hours, setHours] = useState([]);
     const [selectedTime, setSelectedTime] = useState("");
 
     async function handleSelectHour({ value }) {
         console.log("date and time value");
         console.log(value);
-        console.log(date);
+        const formattedDate = format(date, 'yyyy-MM-dd');
+        console.log(formattedDate); // Output: yyyy-mm-dd
         setSelectedTime(value);
         navigation.navigate('ConfirmScreen', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
 
@@ -66,6 +54,15 @@ const SelectDateTime = ({ route, navigation }) => {
     const formatDate = stringDate => {
         return format(parseISO(stringDate), 'HH:mm');
     };
+
+    useEffect(() => {
+        if (designerSchedules?.timeSlots) {
+            setHours(designerSchedules.timeSlots)
+        }
+        else {
+            setHours([]);
+        }
+    }, [designerSchedules])
 
     return (
         // <View>
@@ -78,12 +75,16 @@ const SelectDateTime = ({ route, navigation }) => {
 
                 <HourList
                     data={hours}
-                    keyExtractor={item => String(item.time)}
+                    keyExtractor={item => String(item?.time)}
                     renderItem={({ item }) => (
                         <Hour
-                            enabled={item.available}
-                            onPress={() => handleSelectHour(item)}>
-                            <Title>{item.value}</Title>
+                            disabled={item?.isBooked}
+                            onPress={() => {
+                                if (!item?.isBooked) {
+                                    handleSelectHour(item);
+                                }
+                            }}>
+                            <Title>{item?.time}</Title>
                         </Hour>
                     )}
                 />

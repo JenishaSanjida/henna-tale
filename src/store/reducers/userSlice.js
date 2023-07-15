@@ -6,7 +6,8 @@ const initialState = {
     loggedInUserDetail: null,
     userList: null,
     paginationDetails: null,
-    selectedDesigner: null
+    selectedDesigner: null,
+    designerSchedules: null
 };
 
 const userSlice = createSlice({
@@ -30,6 +31,9 @@ const userSlice = createSlice({
         },
         setSelectedDesigner: (state, action) => {
             state.selectedDesigner = action.payload;
+        },
+        setDesignerSchedules: (state, action) => {
+            state.designerSchedules = action.payload;
         }
     },
 });
@@ -40,7 +44,8 @@ export const {
     setLoggedInUserDetail,
     setUserList,
     setPaginationDetails,
-    setSelectedDesigner
+    setSelectedDesigner,
+    setDesignerSchedules
 } = userSlice.actions;
 
 export default userSlice.reducer;

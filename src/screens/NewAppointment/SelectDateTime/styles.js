@@ -19,7 +19,7 @@ export const Hour = styled(RectButton)`
   border-radius: 4px;
   padding: 10px;
   width: 30%;
-  opacity: ${props => (props.enabled ? 0.6 : 1)};
+  opacity: ${props => (props.disabled ? 0.6 : 1)};
 
   align-items: center;
   margin: 0 5px 10px;
