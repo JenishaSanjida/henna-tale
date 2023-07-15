@@ -20,7 +20,8 @@ import { dummyAvatar, dummyPicture } from '../../constants/others';
 
 const Stack = createNativeStackNavigator();
 
-const UserCard = ({ avatar, picture, name, onPressViewProfile, onPressBookAppointment }) => (
+const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, onPressViewProfile, onPressBookAppointment }) => (
+
 
     <View style={styles.cardContainer}>
 
@@ -38,7 +39,7 @@ const UserCard = ({ avatar, picture, name, onPressViewProfile, onPressBookAppoin
                 <Text style={styles.buttonText}>View Profile</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={onPressBookAppointment}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: currentUserEmail == loggedInUserEmail ? '#56799c' : '#2c3e50'}]} onPress={onPressBookAppointment} disabled={currentUserEmail == loggedInUserEmail ? true : false}>
                 <Icon name="calendar" size={20} color="#FFFFFF" style={styles.buttonIcon} />
                 <Text style={styles.buttonText}>Book Appointment</Text>
             </TouchableOpacity>
@@ -54,7 +55,7 @@ const Home = ({ navigation }) => {
     const [pagination, setPagination] = useState(null);
     const [users, setUsers] = useState([]);
 
-    const { accessToken, userList, paginationDetails } = useSelector(state => state.user);
+    const { accessToken, userList, paginationDetails, loggedInUserDetail } = useSelector(state => state.user);
 
     const dispatch = useDispatch();
 
@@ -110,7 +111,7 @@ const Home = ({ navigation }) => {
     const handleViewProfile = (user) => {
         console.log('View Profile:', user.name);
         dispatch(setSelectedDesigner(user));
-        navigation.navigate('Designer', { name: user.name, avatar: user?.avatar ? user?.avatar : dummyAvatar, userDetail: user });
+        navigation.navigate('Designer');
         // Handle view profile event
     };
 
@@ -122,6 +123,8 @@ const Home = ({ navigation }) => {
 
     const renderUserCard = ({ item }) => (
         <UserCard
+            currentUserEmail={item?.email}
+            loggedInUserEmail={loggedInUserDetail?.email}
             avatar={item?.avatar ? item?.avatar : dummyAvatar}
             picture={item?.picture ? item?.picture : dummyPicture}
             name={item?.name}
