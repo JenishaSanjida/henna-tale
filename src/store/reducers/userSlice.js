@@ -4,7 +4,8 @@ const initialState = {
     accessToken: null,
     loggedInUserDetail: null,
     userList: null,
-    paginationDetails: null
+    paginationDetails: null,
+    selectedDesigner: null
 };
 
 const userSlice = createSlice({
@@ -22,6 +23,9 @@ const userSlice = createSlice({
         },
         setPaginationDetails: (state, action) => {
             state.paginationDetails = action.payload;
+        },
+        setSelectedDesigner: (state, action) => {
+            state.selectedDesigner = action.payload;
         }
     },
 });
@@ -30,7 +34,8 @@ export const {
     setAccessToken,
     setLoggedInUserDetail,
     setUserList,
-    setPaginationDetails
+    setPaginationDetails,
+    setSelectedDesigner
 } = userSlice.actions;
 
 export default userSlice.reducer;

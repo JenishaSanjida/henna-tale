@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
+import { dummyAvatar, dummyCoverPhoto } from '../../constants/others';
+import { FILE_BASE_URL } from '../../constants/apiConfig';
 
-const DesignerProfile = ({ route, navigation }) => {
-    const { name, avatar, userDetail } = route.params;
+const DesignerProfile = ({ navigation }) => {
+
+    const { selectedDesigner } = useSelector(state => state.user);
 
     navigation.setOptions({
-        title: name
+        title: selectedDesigner?.name
     });
 
     const user = {
-        coverPhoto: 'https://st2.depositphotos.com/4238279/11747/i/600/depositphotos_117475622-stock-photo-dramatic-sunset-at-the-beach.jpg',
-        avatar: avatar,
-        name: name,
-        address: userDetail?.thana + ', ' + userDetail?.district + ', ' + userDetail?.division,
-        photos: [
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random',
-            'https://picsum.photos/200/300?random'
-        ],
+        coverPhoto: selectedDesigner?.coverPhoto ? `${FILE_BASE_URL}/${selectedDesigner?.coverPhoto}` : dummyCoverPhoto,
+        avatar: selectedDesigner?.avatar ? `${FILE_BASE_URL}/${selectedDesigner?.avatar}` : dummyAvatar,
+        name: selectedDesigner?.name,
+        address: selectedDesigner?.thana + ', ' + selectedDesigner?.district + ', ' + selectedDesigner?.division,
+        photos: selectedDesigner?.portfolio?.designs,
         followers: 1000,
         following: 500,
     };
@@ -35,7 +30,7 @@ const DesignerProfile = ({ route, navigation }) => {
     };
 
     const renderPhotoItem = ({ item }) => (
-        <Image source={{ uri: item }} style={styles.photoItem} />
+        <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.photoItem} />
     );
 
     return (
@@ -49,13 +44,13 @@ const DesignerProfile = ({ route, navigation }) => {
             <Text style={styles.name}>{user.name}</Text>
             <Text style={styles.address}>{user.address}</Text>
             <View style={styles.infoContainer}>
-                <Text style={styles.infoText}>{user.photos.length} Photos</Text>
+                <Text style={styles.infoText}>{user?.photos?.length} Photos</Text>
                 {/* <Text style={styles.infoText}>{user.followers} Followers</Text> */}
                 {/* <Text style={styles.infoText}>{user.following} Following</Text> */}
             </View>
             <View style={styles.photoContainer}>
                 <FlatList
-                    data={showAllPhotos ? user.photos : user.photos.slice(0, maxVisiblePhotos)}
+                    data={showAllPhotos ? user?.photos : user?.photos.slice(0, maxVisiblePhotos)}
                     renderItem={renderPhotoItem}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={3}

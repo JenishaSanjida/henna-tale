@@ -15,7 +15,7 @@ import SelectDateTime from '../NewAppointment/SelectDateTime';
 import { BASE_URL } from '../../constants/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
-import { setPaginationDetails, setUserList } from '../../store/reducers/userSlice';
+import { setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
 import { dummyAvatar, dummyPicture } from '../../constants/others';
 
 const Stack = createNativeStackNavigator();
@@ -109,6 +109,7 @@ const Home = ({ navigation }) => {
 
     const handleViewProfile = (user) => {
         console.log('View Profile:', user.name);
+        dispatch(setSelectedDesigner(user));
         navigation.navigate('Designer', { name: user.name, avatar: user?.avatar ? user?.avatar : dummyAvatar, userDetail: user });
         // Handle view profile event
     };
