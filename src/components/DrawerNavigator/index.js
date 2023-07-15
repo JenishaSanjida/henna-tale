@@ -4,6 +4,8 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import BottomNavigator from '../BottomNavigator';
 import { StyleSheet, Text, View } from 'react-native';
 import CustomDrawerContent from '../CustomDrawerComponent';
+import { useSelector } from 'react-redux';
+import Login from '../../screens/Login';
 
 const Drawer = createDrawerNavigator();
 
@@ -107,10 +109,16 @@ const MyDrawer = () => {
 
 
 export default function App() {
+
+    const { isLoggedIn } = useSelector((state) => state.user);
+
     return (
-        <NavigationContainer>
-            <MyDrawer />
-        </NavigationContainer>
-    );
+        isLoggedIn ?
+            <NavigationContainer>
+                <MyDrawer />
+            </NavigationContainer>
+            : <Login />
+    )
+
 }
 

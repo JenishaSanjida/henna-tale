@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
 import { setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
 import { dummyAvatar, dummyPicture } from '../../constants/others';
+import Login from '../Login';
 
 const Stack = createNativeStackNavigator();
 
@@ -39,7 +40,7 @@ const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, 
                 <Text style={styles.buttonText}>View Profile</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, {backgroundColor: currentUserEmail == loggedInUserEmail ? '#56799c' : '#2c3e50'}]} onPress={onPressBookAppointment} disabled={currentUserEmail == loggedInUserEmail ? true : false}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: currentUserEmail == loggedInUserEmail ? '#56799c' : '#2c3e50' }]} onPress={onPressBookAppointment} disabled={currentUserEmail == loggedInUserEmail ? true : false}>
                 <Icon name="calendar" size={20} color="#FFFFFF" style={styles.buttonIcon} />
                 <Text style={styles.buttonText}>Book Appointment</Text>
             </TouchableOpacity>
@@ -299,6 +300,10 @@ const HomeScreenStack = () => {
                     ),
                     // headerSh
                 }}
+            />
+            <Stack.Screen
+                name="Login"
+                component={Login}
             />
         </Stack.Navigator>
     );

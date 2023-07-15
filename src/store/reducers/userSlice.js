@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     accessToken: null,
+    isLoggedIn: false,
     loggedInUserDetail: null,
     userList: null,
     paginationDetails: null,
@@ -14,6 +15,9 @@ const userSlice = createSlice({
     reducers: {
         setAccessToken: (state, action) => {
             state.accessToken = action.payload;
+        },
+        setIsLoggedIn: (state, action) => {
+            state.isLoggedIn = action.payload;
         },
         setLoggedInUserDetail: (state, action) => {
             state.loggedInUserDetail = action.payload;
@@ -32,6 +36,7 @@ const userSlice = createSlice({
 
 export const {
     setAccessToken,
+    setIsLoggedIn,
     setLoggedInUserDetail,
     setUserList,
     setPaginationDetails,

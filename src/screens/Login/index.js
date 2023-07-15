@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, TextInput, TouchableOpacity, ToastAndroid } fro
 import { styles } from './styles';
 import MyDrawer from '../../components/DrawerNavigator';
 import Registration from '../Registration';
-import { setAccessToken, setLoggedInUserDetail } from '../../store/reducers/userSlice';
-import { useDispatch } from 'react-redux';
+import { setAccessToken, setIsLoggedIn, setLoggedInUserDetail } from '../../store/reducers/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { BASE_URL } from '../../constants/apiConfig';
 
 export default function Login() {
@@ -13,8 +13,9 @@ export default function Login() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentScreen, setCurrentScreen] = useState('Login');
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   const handleScreenChange = () => {
     setCurrentScreen(currentScreen === 'Login' ? 'Register' : 'Login');
@@ -64,8 +65,7 @@ export default function Login() {
 
           dispatch(setLoggedInUserDetail(data?.user));
           dispatch(setAccessToken(data?.token));
-
-          setIsLoggedIn(true);
+          dispatch(setIsLoggedIn(true));
         }
 
       })

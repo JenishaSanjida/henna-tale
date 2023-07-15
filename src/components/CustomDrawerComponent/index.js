@@ -5,13 +5,15 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar, Divider } from 'react-native-paper';
 
 import { styles } from './styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAccessToken, setIsLoggedIn, setLoggedInUserDetail, setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
 
 
-const CustomDrawerContent = ({ navigation }) => {
+const CustomDrawerContent = () => {
 
     const { loggedInUserDetail } = useSelector(state => state.user);
 
+    const dispatch = useDispatch();
 
     return (
         <View
@@ -85,7 +87,12 @@ const CustomDrawerContent = ({ navigation }) => {
                 <Text style={[styles.footerText, { color: '#fff' }]}>
                 </Text>
                 <TouchableOpacity style={styles.ListItem} onPress={() => {
-                    console.log("Logout clicked...");
+                    dispatch(setUserList(null));
+                    dispatch(setAccessToken(null));
+                    dispatch(setLoggedInUserDetail(null));
+                    dispatch(setSelectedDesigner(null));
+                    dispatch(setPaginationDetails(null));
+                    dispatch(setIsLoggedIn(false));
                 }}>
                     <View style={styles.listItemInnerContentView}>
                         <Text style={styles.TextStyles}>Log out {' '}</Text>
