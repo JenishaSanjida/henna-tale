@@ -21,7 +21,8 @@ import Login from '../Login';
 
 const Stack = createNativeStackNavigator();
 
-const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, onPressViewProfile, onPressBookAppointment }) => (
+const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, onPressViewProfile, onPressBookAppointment, currentUserRole,
+    loggedInUserRole }) => (
 
 
     <View style={styles.cardContainer}>
@@ -40,7 +41,7 @@ const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, 
                 <Text style={styles.buttonText}>View Profile</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={[styles.button, { backgroundColor: currentUserEmail == loggedInUserEmail ? '#56799c' : '#2c3e50' }]} onPress={onPressBookAppointment} disabled={currentUserEmail == loggedInUserEmail ? true : false}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: ((currentUserEmail == loggedInUserEmail) || (currentUserRole == loggedInUserRole) || (loggedInUserRole == "designer")) ? '#56799c' : '#2c3e50' }]} onPress={onPressBookAppointment} disabled={(currentUserEmail == loggedInUserEmail) || (currentUserRole == loggedInUserRole) || (loggedInUserRole == "designer") ? true : false}>
                 <Icon name="calendar" size={20} color="#FFFFFF" style={styles.buttonIcon} />
                 <Text style={styles.buttonText}>Book Appointment</Text>
             </TouchableOpacity>
@@ -127,6 +128,8 @@ const Home = ({ navigation }) => {
         <UserCard
             currentUserEmail={item?.email}
             loggedInUserEmail={loggedInUserDetail?.email}
+            currentUserRole={item?.role}
+            loggedInUserRole={loggedInUserDetail?.role}
             avatar={item?.avatar ? item?.avatar : dummyAvatar}
             picture={item?.picture ? item?.picture : dummyPicture}
             name={item?.name}

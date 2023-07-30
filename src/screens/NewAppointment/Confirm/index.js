@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import React, { useEffect, useMemo, useState } from 'react';
+import { TouchableOpacity, ToastAndroid } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { format } from 'date-fns';
 import { enUS } from "date-fns/locale";
@@ -14,8 +14,15 @@ import {
     SubmitButton,
     ErrorMessage,
 } from './styles';
+import { BASE_URL } from '../../../constants/apiConfig';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Confirm({ route, navigation }) {
+
+
+    const dispatch = useDispatch();
+    const { loggedInUserDetail, accessToken, selectedDesigner } = useSelector(state => state.user);
+
 
     navigation.setOptions({
 
@@ -37,10 +44,16 @@ export default function Confirm({ route, navigation }) {
     })
 
 
-    const { date, time, name, avatar } = route.params;
+    const { date, time, name, avatar, formattedDate } = route.params;
 
 
     // const navigation = useNavigation();
+
+    useEffect(() => {
+        console.log("date and time...");
+        console.log(formattedDate);
+        console.log(time);
+    }, [time, formattedDate]);
 
 
     const [loading, setLoading] = useState(false);
@@ -55,6 +68,15 @@ export default function Confirm({ route, navigation }) {
         [date],
     );
 
+    const showToastWithGravity = (message) => {
+        ToastAndroid.showWithGravity(
+            message,
+            ToastAndroid.LONG,
+            ToastAndroid.CENTER,
+        );
+    }
+
+
     // const dateFormatted = useMemo(
     //     () => format(parseISO(date), 'Pp', { locale: enUS }),
     //     [date],
@@ -63,6 +85,46 @@ export default function Confirm({ route, navigation }) {
     async function handleAddAppointment() {
         // setLoading(true);
         setError(null);
+
+        // Prepare the registration data
+        const appointmentData = {
+            customerId: loggedInUserDetail?._id,
+            designerId: selectedDesigner?._id,
+            date: formattedDate,
+            time: time
+        };
+
+
+        // Calling schedule save API
+        fetch(`${BASE_URL}/appointment/save`, {
+            method: 'POST',
+            headers: {
+                Authorization: `${accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(appointmentData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the API response here
+                console.log('Appointment save successful', data);
+
+                if (data?.error) {
+                    showToastWithGravity(data?.error);
+                }
+
+                else {
+                    // Perform any necessary actions after successful appointment
+                    showToastWithGravity(data?.message);
+                    // dispatch(setLoggedInUserDetail(data?.user));
+                }
+
+            })
+            .catch(error => {
+                console.error('Appointment save failed', error);
+                showToastWithGravity('Something went wrong!');
+                // Handle the error case
+            });
 
         // try {
         //     await api.post('appointments', {

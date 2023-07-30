@@ -41,13 +41,13 @@ const SelectDateTime = ({ route, navigation }) => {
     const [hours, setHours] = useState([]);
     const [selectedTime, setSelectedTime] = useState("");
 
-    async function handleSelectHour({ value }) {
+    async function handleSelectHour({ time }) {
         console.log("date and time value");
-        console.log(value);
+        console.log(time);
         const formattedDate = format(date, 'yyyy-MM-dd');
         console.log(formattedDate); // Output: yyyy-mm-dd
-        setSelectedTime(value);
-        navigation.navigate('ConfirmScreen', { date: date, time: value, name: route?.params?.name, avatar: route?.params?.avatar });
+        setSelectedTime(time);
+        navigation.navigate('ConfirmScreen', { date: date, formattedDate: formattedDate, time: time, name: route?.params?.name, avatar: route?.params?.avatar });
 
     }
 
