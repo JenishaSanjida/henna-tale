@@ -3,16 +3,16 @@ import { View, Text, StyleSheet, Button, ActivityIndicator, ScrollView, Linking,
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import UserList from '../../constants/userList';
-import { Avatar, ListItem, SearchBar } from 'react-native-elements';
+import { Avatar, Badge, ListItem, SearchBar } from 'react-native-elements';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { BASE_URL, BASE_URL_PLACE } from '../../constants/apiConfig';
+import { BASE_URL, BASE_URL_PLACE, FILE_BASE_URL } from '../../constants/apiConfig';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
 import PlaceDropdowns from '../../components/PlaceDropdowns';
 import { setPaginationDetails, setUserList } from '../../store/reducers/userSlice';
 import { dummyAvatar } from '../../constants/others';
-
+import { styles } from './styles';
 
 // import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -110,7 +110,7 @@ const Search = () => {
                             containerStyle={{
                                 backgroundColor: '#d0e0e3',
                             }}>
-                            <Avatar rounded source={{ uri: item?.profileImg ? item?.profileImg : dummyAvatar }} />
+                            <Avatar rounded source={{ uri: item?.avatar ? `${FILE_BASE_URL}/${item?.avatar}` : dummyAvatar }} />
                             <ListItem.Content>
                                 <ListItem.Title
                                     style={{
@@ -124,6 +124,13 @@ const Search = () => {
                                     {item?.thana}, {item?.district}, {item?.division}
                                 </ListItem.Subtitle>
                             </ListItem.Content>
+
+                            <Badge
+                                value={item.role}
+                                status="primary"
+                                badgeStyle={styles.badge}
+                                textStyle={styles.badgeText}
+                            />
                             <ListItem.Chevron />
                         </ListItem>
                     </TouchableOpacity>
