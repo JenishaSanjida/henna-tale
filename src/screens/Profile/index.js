@@ -166,9 +166,51 @@ export const Profile = () => {
         setShowAllPhotos(!showAllPhotos);
     };
 
-    const renderPhotoItem = ({ item }) => (
-        <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.photoItem} />
-    );
+    // const renderPhotoItem = ({ item }) => (
+    //     <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.photoItem} />
+    // );
+
+    const renderPhotoItem = ({ item }) => {
+        const handleDeletePhoto = async () => {
+            try {
+                // Make an API call to delete the photo using item.id or any appropriate identifier
+                const response = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/portfolio/images/${item}`, {
+                    method: 'DELETE'
+                });
+
+                response.json().then(data => {
+
+                    if (data?.portfolio) {
+                        showToastWithGravity(data?.message);
+                        dispatch(setLoggedInUserDetail({
+                            ...loggedInUserDetail,
+                            portfolio: data?.portfolio,
+                        }))
+                    } else {
+                        showToastWithGravity(data.message)
+                    }
+
+                })
+                // Update the portfolio in your state after the photo is successfully deleted
+            } catch (error) {
+                console.error('Error deleting photo:', error);
+                showToastWithGravity(error)
+            }
+        };
+
+        return (
+            <View style={styles.portfolioImageContainer}>
+                <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.portfolioImage} />
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={handleDeletePhoto}
+                >
+                    <FontAwesome name="trash" style={{ fontSize: 24, color: 'white' }} />
+                </TouchableOpacity>
+            </View>
+        );
+    };
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>

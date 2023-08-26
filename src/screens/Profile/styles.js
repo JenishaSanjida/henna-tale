@@ -54,7 +54,7 @@ export const styles = StyleSheet.create({
   portfolioImageContainer: {
     width: '32%',
     aspectRatio: 1,
-    marginBottom: 10,
+    margin: 2,
     borderRadius: 8,
     overflow: 'hidden',
   },
@@ -77,6 +77,14 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
     color: '#fff',
     fontWeight: 'bold',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    borderRadius: 1,
+    padding: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1,
   },
   pickerContainer: {
     borderWidth: 1,
