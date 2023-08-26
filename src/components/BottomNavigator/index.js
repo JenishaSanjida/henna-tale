@@ -27,17 +27,20 @@ const BottomNavigator = () => {
                     let iconName;
 
                     if (route.name === "HomeScreenStack") {
-                        iconName = focused ? "home-sharp" : "home-outline";
+                        iconName = focused ? "home" : "home-outline";
                         size = focused ? size + 8 : size + 2;
                     }
                     else if (route.name === "SearchScreenStack") {
-                        iconName = focused ? "search" : "ios-search-outline"
+                        iconName = focused ? "search-circle" : "search-circle-outline";
+                        size = focused ? size + 8 : size + 2;
                     }
                     else if (route.name === "ProfileScreenStack") {
-                        iconName = focused ? "ios-person-circle" : "ios-person-outline"
+                        iconName = focused ? "person-circle-sharp" : "person-circle-outline";
+                        size = focused ? size + 8 : size + 2;
                     }
                     else if (route.name === "ActivityScreenStack") {
-                        iconName = focused ? "ios-heart" : "ios-heart-outline"
+                        iconName = focused ? "information-circle-sharp" : "information-circle-outline";
+                        size = focused ? size + 8 : size + 2;
                     }
 
 
