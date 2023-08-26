@@ -28,21 +28,62 @@
 
 // export default MyOrder
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Avatar, ListItem, Badge } from 'react-native-elements';
+import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { dummyAvatar } from '../../constants/others';
 
 
 const MyOrder = () => {
-    const orders = [
-        { id: 1, title: 'Order 1', status: 'Pending', date: '2023-05-28' },
-        { id: 2, title: 'Order 2', status: 'Processing', date: '2023-05-27' },
-        { id: 3, title: 'Order 3', status: 'Shipped', date: '2023-05-26' },
-        { id: 4, title: 'Order 4', status: 'Delivered', date: '2023-05-25' },
-    ];
+
+    const [orders, setOrders] = useState([]);
+
+    const { accessToken, userList, paginationDetails, loggedInUserDetail } = useSelector(state => state.user);
+
+    const [pagination, setPagination] = useState(null);
+
+    const dispatch = useDispatch();
+
+    // getting designer list
+    useEffect(() => {
+
+        if (accessToken) {
+
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    Authorization: `${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            };
+            // Make an API call to store the userlist data
+            fetch(`${BASE_URL}/appointment/list-by-user/${loggedInUserDetail?._id}?role=${loggedInUserDetail?.role}&page=1&size=10`, requestOptions)
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the API response here
+                    console.log('Appointment list successful', data);
+                    // Perform any necessary actions after getting user list
+                    setOrders(data?.appointments);
+                })
+                .catch(error => {
+                    console.error('Appointment list failed', error);
+                    // Handle the error case
+                });
+        }
+
+    }, []);
+
+    // const orders = [
+    //     { id: 1, title: 'Order 1', status: 'Pending', date: '2023-05-28' },
+    //     { id: 2, title: 'Order 2', status: 'Processing', date: '2023-05-27' },
+    //     { id: 3, title: 'Order 3', status: 'Shipped', date: '2023-05-26' },
+    //     { id: 4, title: 'Order 4', status: 'Delivered', date: '2023-05-25' },
+    // ];
 
     const handleOrderPress = (order) => {
-        console.log('Order clicked:', order.title);
+        console.log('Order clicked:', order);
         // Implement your desired logic for handling order click here
     };
 
@@ -58,14 +99,18 @@ const MyOrder = () => {
                         containerStyle={styles.listItemContainer}>
                         <Avatar
                             rounded
-                            source={{ uri: 'https://randomuser.me/api/portraits/men/75.jpg' }}
+                            source={{
+                                uri: loggedInUserDetail?.role == 'designer' ?
+                                    (item?.customer?.avatar != "" ? `${FILE_BASE_URL}/${item?.customer?.avatar}` : dummyAvatar) :
+                                    (item?.designer?.avatar != "" ? `${FILE_BASE_URL}/${item?.designer?.avatar}` : dummyAvatar)
+                            }}
                         />
                         <ListItem.Content>
                             <ListItem.Title style={styles.title}>
-                                {item.title}
+                                {loggedInUserDetail?.role == 'designer' ? item?.customer?.name : item?.designer?.name}
                             </ListItem.Title>
                             <ListItem.Subtitle style={styles.subtitle}>
-                                {item.date}
+                                {getFormattedDate(item.date)} {', '} {item?.time}
                             </ListItem.Subtitle>
                         </ListItem.Content>
                         <Badge
@@ -82,6 +127,11 @@ const MyOrder = () => {
     );
 };
 
+const getFormattedDate = (rawDate) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Intl.DateTimeFormat('en-US', options).format(new Date(rawDate));
+}
+
 const getStatusBadgeStatus = (status) => {
     switch (status) {
         case 'Pending':
@@ -93,7 +143,7 @@ const getStatusBadgeStatus = (status) => {
         case 'Delivered':
             return 'success';
         default:
-            return 'default';
+            return 'primary';
     }
 };
 

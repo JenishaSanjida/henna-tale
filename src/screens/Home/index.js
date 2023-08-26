@@ -12,7 +12,7 @@ import { styles } from './styles';
 import Confirm from '../NewAppointment/Confirm';
 import DesignerProfile from '../DesignerProfile';
 import SelectDateTime from '../NewAppointment/SelectDateTime';
-import { BASE_URL } from '../../constants/apiConfig';
+import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDynamicAsyncThunk } from '../../store/reducers/apiSlice';
 import { setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
@@ -24,11 +24,14 @@ const Stack = createNativeStackNavigator();
 const UserCard = ({ currentUserEmail, loggedInUserEmail, avatar, picture, name, onPressViewProfile, onPressBookAppointment, currentUserRole,
     loggedInUserRole }) => (
 
-
     <View style={styles.cardContainer}>
 
         <View style={styles.headerContainer}>
-            <Image source={{ uri: avatar }} style={styles.avatar} />
+            {
+                avatar && avatar != "" ?
+                    <Image source={{ uri: `${FILE_BASE_URL}/${avatar}` }} style={styles.avatar} /> :
+                    <Image source={{ uri: dummyAvatar }} style={styles.avatar} />
+            }
             <Text style={styles.name}>{name}</Text>
         </View>
 
@@ -130,7 +133,7 @@ const Home = ({ navigation }) => {
             loggedInUserEmail={loggedInUserDetail?.email}
             currentUserRole={item?.role}
             loggedInUserRole={loggedInUserDetail?.role}
-            avatar={item?.avatar ? item?.avatar : dummyAvatar}
+            avatar={item?.avatar && item?.avatar != "" ? item?.avatar : ""}
             picture={item?.picture ? item?.picture : dummyPicture}
             name={item?.name}
             onPressViewProfile={() => handleViewProfile(item)}
@@ -286,8 +289,7 @@ const HomeScreenStack = () => {
                             <Icon name="arrow-back" size={30} color="#000" />
                         </TouchableOpacity>
                     ),
-                    // headerShown: true,
-
+                    tabBarVisible: false, // This line hides the bottom tab bar
                 }}
             />
             <Stack.Screen

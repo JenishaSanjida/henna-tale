@@ -8,6 +8,7 @@ import { styles } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken, setIsLoggedIn, setLoggedInUserDetail, setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
 import { FILE_BASE_URL } from '../../constants/apiConfig';
+import { useNavigation } from '@react-navigation/native';
 
 
 const CustomDrawerContent = () => {
@@ -15,6 +16,8 @@ const CustomDrawerContent = () => {
     const { loggedInUserDetail } = useSelector(state => state.user);
 
     const dispatch = useDispatch();
+
+    const navigation = useNavigation();
 
     return (
         <View
@@ -69,7 +72,9 @@ const CustomDrawerContent = () => {
                     <DrawerItem
                         label="My Orders"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
-                        onPress={() => navigation.navigate('MyOrder')}
+                        onPress={() => {
+                            navigation.navigate('HomeScreenStack', { screen: 'MyOrder' });
+                        }}
                         icon={({ color, size }) => (
                             <Icon name="globe" color={'#000'} size={24} />
                         )}
