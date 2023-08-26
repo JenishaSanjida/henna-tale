@@ -1,40 +1,10 @@
-// import React from 'react';
-// import { View, Text } from 'react-native';
-// import { TouchableOpacity } from 'react-native-gesture-handler';
-// import { useNavigation } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import FontAwesome from "react-native-vector-icons/FontAwesome";
-// // import OptionButtons from "../../components/ToogleBtn/index";
-
-
-// const Stack = createNativeStackNavigator();
-
-// const MyOrder = (props) => {
-//     return (
-//         <View>
-//             <Text>MyOrder Screen</Text>
-//         </View>
-
-//     )
-// }
-
-
-// // const ToogleBtn = (props) => {
-// //     return( <div className="App">
-// //     <OptionButtons/>
-// //   </div>
-// //   )
-// // }
-
-// export default MyOrder
-
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { Avatar, ListItem, Badge } from 'react-native-elements';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { Avatar, ListItem, Badge, Button, Icon } from 'react-native-elements';
 import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { dummyAvatar } from '../../constants/others';
-
+import { styles } from './style';
 
 const MyOrder = () => {
 
@@ -43,6 +13,8 @@ const MyOrder = () => {
     const { accessToken, userList, paginationDetails, loggedInUserDetail } = useSelector(state => state.user);
 
     const [pagination, setPagination] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -75,55 +47,91 @@ const MyOrder = () => {
 
     }, []);
 
-    // const orders = [
-    //     { id: 1, title: 'Order 1', status: 'Pending', date: '2023-05-28' },
-    //     { id: 2, title: 'Order 2', status: 'Processing', date: '2023-05-27' },
-    //     { id: 3, title: 'Order 3', status: 'Shipped', date: '2023-05-26' },
-    //     { id: 4, title: 'Order 4', status: 'Delivered', date: '2023-05-25' },
-    // ];
-
     const handleOrderPress = (order) => {
         console.log('Order clicked:', order);
+        setSelectedOrder(order);
+        setIsModalVisible(true);
         // Implement your desired logic for handling order click here
     };
 
+    const toggleModal = () => {
+        setIsModalVisible(!isModalVisible);
+    };
+
     return (
-        <ScrollView>
-            {orders.map((item, index) => (
-                <TouchableOpacity
-                    key={item.id}
-                    onPress={() => handleOrderPress(item)}>
-                    <ListItem
-                        key={index}
-                        bottomDivider
-                        containerStyle={styles.listItemContainer}>
-                        <Avatar
-                            rounded
-                            source={{
-                                uri: loggedInUserDetail?.role == 'designer' ?
-                                    (item?.customer?.avatar != "" ? `${FILE_BASE_URL}/${item?.customer?.avatar}` : dummyAvatar) :
-                                    (item?.designer?.avatar != "" ? `${FILE_BASE_URL}/${item?.designer?.avatar}` : dummyAvatar)
-                            }}
-                        />
-                        <ListItem.Content>
-                            <ListItem.Title style={styles.title}>
-                                {loggedInUserDetail?.role == 'designer' ? item?.customer?.name : item?.designer?.name}
-                            </ListItem.Title>
-                            <ListItem.Subtitle style={styles.subtitle}>
-                                {getFormattedDate(item.date)} {', '} {item?.time}
-                            </ListItem.Subtitle>
-                        </ListItem.Content>
-                        <Badge
-                            value={item.status}
-                            status={getStatusBadgeStatus(item.status)}
-                            badgeStyle={styles.badge}
-                            textStyle={styles.badgeText}
-                        />
-                        <ListItem.Chevron />
-                    </ListItem>
-                </TouchableOpacity>
-            ))}
-        </ScrollView>
+        <>
+            <ScrollView>
+                {orders.map((item, index) => (
+                    <TouchableOpacity
+                        key={item.id}
+                        onPress={() => handleOrderPress(item)}>
+                        <ListItem
+                            key={index}
+                            bottomDivider
+                            containerStyle={styles.listItemContainer}>
+                            <Avatar
+                                rounded
+                                source={{
+                                    uri: loggedInUserDetail?.role == 'designer' ?
+                                        (item?.customer?.avatar != "" ? `${FILE_BASE_URL}/${item?.customer?.avatar}` : dummyAvatar) :
+                                        (item?.designer?.avatar != "" ? `${FILE_BASE_URL}/${item?.designer?.avatar}` : dummyAvatar)
+                                }}
+                            />
+                            <ListItem.Content>
+                                <ListItem.Title style={styles.title}>
+                                    {loggedInUserDetail?.role == 'designer' ? item?.customer?.name : item?.designer?.name}
+                                </ListItem.Title>
+                                <ListItem.Subtitle style={styles.subtitle}>
+                                    {getFormattedDate(item.date)} {', '} {item?.time}
+                                </ListItem.Subtitle>
+                            </ListItem.Content>
+                            <Badge
+                                value={item.status}
+                                status={getStatusBadgeStatus(item.status)}
+                                badgeStyle={styles.badge}
+                                textStyle={styles.badgeText}
+                            />
+                            <ListItem.Chevron />
+                        </ListItem>
+                    </TouchableOpacity>
+                ))}
+            </ScrollView>
+
+            <View style={styles.centeredView}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isModalVisible}
+                    onRequestClose={() => {
+                        setIsModalVisible(!isModalVisible);
+                    }}>
+                    {selectedOrder &&
+                        <View style={styles.centeredView}>
+                            <View style={styles.modalView}>
+                                <Text style={styles.modalHeaderText}>Appointment Details</Text>
+                                <TouchableOpacity
+                                    style={styles.closeButton}
+                                    onPress={toggleModal}
+                                >
+                                    <Icon name='times' type='font-awesome' size={24} />
+                                </TouchableOpacity>
+                                <Text style={styles.orderDetailText}>
+                                    Customer: {selectedOrder?.customer?.name}
+                                </Text>
+                                <Text style={styles.orderDetailText}>
+                                    Designer: {selectedOrder?.designer?.name}
+                                </Text>
+                                <Text style={styles.orderDetailText}>Date: {getFormattedDate(selectedOrder.date)}</Text>
+                                <Text style={styles.orderDetailText}>Time: {selectedOrder.time}</Text>
+                                <Text style={styles.orderDetailText}>Status: {selectedOrder.status}</Text>
+                                <Text style={styles.orderDetailText}>Phone: {selectedOrder?.phone}</Text>
+                                <Text style={styles.orderDetailText}>Address: {selectedOrder?.address}</Text>
+                            </View>
+                        </View>
+                    }
+                </Modal>
+            </View>
+        </>
     );
 };
 
@@ -146,30 +154,5 @@ const getStatusBadgeStatus = (status) => {
             return 'primary';
     }
 };
-
-const styles = StyleSheet.create({
-    listItemContainer: {
-        backgroundColor: '#d0e0e3',
-    },
-    title: {
-        fontFamily: 'Ubuntu-Bold',
-        color: '#000',
-    },
-    subtitle: {
-        color: 'gray',
-        fontFamily: 'Ubuntu-Medium',
-    },
-    badge: {
-        paddingHorizontal: 5,
-        paddingVertical: 0,
-        borderRadius: 20,
-        marginRight: -30
-    },
-    badgeText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-    },
-});
 
 export default MyOrder;

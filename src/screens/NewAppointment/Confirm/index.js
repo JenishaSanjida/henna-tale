@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { TouchableOpacity, ToastAndroid } from 'react-native';
+import { TouchableOpacity, ToastAndroid, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { format } from 'date-fns';
 import { enUS } from "date-fns/locale";
@@ -14,14 +14,17 @@ import {
     SubmitButton,
     ErrorMessage,
 } from './styles';
-import { BASE_URL } from '../../../constants/apiConfig';
+import { BASE_URL, FILE_BASE_URL } from '../../../constants/apiConfig';
 import { useDispatch, useSelector } from 'react-redux';
+import { dummyAvatar } from '../../../constants/others';
 
 export default function Confirm({ route, navigation }) {
 
 
     const dispatch = useDispatch();
     const { loggedInUserDetail, accessToken, selectedDesigner } = useSelector(state => state.user);
+    const [phoneNumber, onChangePhoneNumber] = useState('');
+    const [address, onChangeAddress] = useState('');
 
 
     navigation.setOptions({
@@ -91,7 +94,9 @@ export default function Confirm({ route, navigation }) {
             customerId: loggedInUserDetail?._id,
             designerId: selectedDesigner?._id,
             date: formattedDate,
-            time: time
+            time: time,
+            address: address,
+            phone: phoneNumber
         };
 
 
@@ -146,7 +151,7 @@ export default function Confirm({ route, navigation }) {
             <Container>
                 <Avatar
                     source={{
-                        uri: avatar ? avatar : `https://randomuser.me/api/portraits/men/75.jpg`,
+                        uri: avatar ? `${FILE_BASE_URL}/${avatar}` : dummyAvatar,
                     }}
                 />
 
@@ -154,9 +159,29 @@ export default function Confirm({ route, navigation }) {
                 <Time>{dateFormatted}</Time>
                 <Time>{time}</Time>
 
-                <SubmitButton onPress={handleAddAppointment} loading={loading}>
-                    Confirm Appointment
-                </SubmitButton>
+                <TextInput
+                    editable
+                    placeholder='Write your correct phone number'
+                    style={{ padding: 5, backgroundColor: 'white', width: 300, marginTop: 20, borderRadius: 5 }}
+                    onChangeText={text => onChangePhoneNumber(text)}
+                    value={phoneNumber}
+                />
+                <TextInput
+                    editable
+                    multiline
+                    numberOfLines={4}
+                    // maxLength={40}
+                    placeholder='Write your detail address'
+                    onChangeText={text => onChangeAddress(text)}
+                    value={address}
+                    style={{ padding: 5, backgroundColor: 'white', width: 300, marginTop: 20, borderRadius: 5 }}
+                />
+
+                {
+                    address && phoneNumber && <SubmitButton onPress={handleAddAppointment} loading={loading}>
+                        Confirm Appointment
+                    </SubmitButton>
+                }
                 {error && <ErrorMessage>{error}</ErrorMessage>}
             </Container>
         </Background>
