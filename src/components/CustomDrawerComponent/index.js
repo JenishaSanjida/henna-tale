@@ -7,6 +7,7 @@ import { Avatar, Divider } from 'react-native-paper';
 import { styles } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAccessToken, setIsLoggedIn, setLoggedInUserDetail, setPaginationDetails, setSelectedDesigner, setUserList } from '../../store/reducers/userSlice';
+import { FILE_BASE_URL } from '../../constants/apiConfig';
 
 
 const CustomDrawerContent = () => {
@@ -32,8 +33,9 @@ const CustomDrawerContent = () => {
                     <Avatar.Image
                         size={50}
                         source={{
-                            uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
+                            uri: loggedInUserDetail?.avatar ? `${FILE_BASE_URL}/${loggedInUserDetail?.avatar}` : 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y',
                         }}
+                        imageProps={{ resizeMode: 'contain' }} /*If you want your image to scale*/
                     />
                 </View>
                 <View style={styles.avatarContainer}>

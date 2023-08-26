@@ -5,6 +5,7 @@ export const styles = StyleSheet.create({
     padding: 16,
   },
   profileContainer: {
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,

@@ -9,7 +9,7 @@ import { Title } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 import Confirm from '../NewAppointment/Confirm';
 import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid, FlatList } from 'react-native';
-import { Input, Avatar, Button } from 'react-native-elements';
+import { Input, Avatar, Button, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { dummyAvatar } from '../../constants/others';
@@ -96,6 +96,77 @@ export const Profile = () => {
             setNewTimeSlot('');
         }
     };
+
+    const handleEditProfilePicture = async () => {
+
+        // Configure image picker options
+        const options = {
+            mediaType: 'photo',
+            maxWidth: 500,
+            maxHeight: 500,
+        };
+
+        // You can also use as a promise without 'callback':
+        const response = await launchImageLibrary(options);
+
+        // Launch image picker
+        // ImagePicker.showImagePicker(options, async (response) => {
+        if (response.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+            console.log('Image picker error: ', response.errorMessage);
+        } else if (response.assets) {
+
+            // console.log(response.assets)
+            // setSelectedImage(response.assets[0]?.uri);
+            try {
+
+                const formData = new FormData();
+
+                formData.append('avatar', {
+                    uri: response.assets[0]?.uri,
+                    type: response.assets[0]?.type,
+                    name: response.assets[0].fileName,
+                });
+
+                // Make an API call to delete the photo using item.id or any appropriate identifier
+                const apiResponse = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/avatar`, {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                apiResponse.json().then(data => {
+
+                    if (data?.avatar) {
+                        showToastWithGravity(data?.message);
+                        dispatch(setLoggedInUserDetail({
+                            ...loggedInUserDetail,
+                            avatar: data?.avatar,
+                        }))
+                    } else {
+                        showToastWithGravity(data.message)
+                    }
+
+                })
+                // Update the portfolio in your state after the photo is successfully deleted
+            } catch (error) {
+                console.error('Error updating photo:', error);
+                showToastWithGravity(error)
+            }
+        }
+    };
+
+    // const handleEditProfilePicture = async () => {
+    //     try {
+    //         // You can implement logic to open the image picker here
+    //         // After selecting a new picture, you can use an API call to update the profile picture
+    //         // Make sure to update your state or data with the new picture URL after the API call
+    //         console.log('Edit profile picture');
+    //     } catch (error) {
+    //         console.error('Error editing profile picture:', error);
+    //     }
+    // };
+
 
     const handleImageUpload = async () => {
         // Implement your image upload logic here
@@ -215,13 +286,19 @@ export const Profile = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.profileContainer}>
+
                 <Avatar
                     rounded
                     source={{
-                        uri: loggedInUserDetail?.picture ? loggedInUserDetail?.picture : dummyAvatar,
+                        uri: loggedInUserDetail?.avatar ? `${FILE_BASE_URL}/${loggedInUserDetail?.avatar}` : dummyAvatar,
                     }}
                     size="large"
-                />
+                    imageProps={{ resizeMode: 'contain' }} /*If you want your image to scale*/
+
+                >
+                    <Avatar.Accessory size={24} onPress={handleEditProfilePicture} />
+                </Avatar>
+
                 <View style={styles.profileInfo}>
                     <Text style={styles.profileName}>{loggedInUserDetail?.name}</Text>
                     <Text style={styles.profileAddress}>
