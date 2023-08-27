@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 // import { DatePickerAndroid } from 'react-native';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 // import DateTimePicker from '@react-native-community/datetimepicker';
@@ -24,6 +24,10 @@ export default function DateInput({ date, ...props }) {
         () => format(date, "dd MMMM yyyy", { locale: enUS }),
         [date],
     );
+
+    useEffect(() => {
+        getSchedules(dateFormatted);
+    }, [dateFormatted]);
 
     const getSchedules = (selectedDate) => {
         const requestOptions = {

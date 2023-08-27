@@ -62,7 +62,7 @@ const SelectDateTime = ({ route, navigation }) => {
         else {
             setHours([]);
         }
-    }, [designerSchedules])
+    }, [designerSchedules, date])
 
     return (
         // <View>
