@@ -475,7 +475,7 @@ export const Profile = () => {
                                     // onPress={() => handleSelectHour(item)}
                                     >
 
-                                        <DeleteButton onPress={() => confirmDelete(schedule.dayOfWeek, item.time)}>
+                                        <DeleteButton disabled={item.isBooked} onPress={() => confirmDelete(schedule.dayOfWeek, item.time)}>
                                             {/* You can replace this with your actual delete button UI */}
                                             {/* <Title>X</Title> */}
                                             <FontAwesome name="minus-circle" style={{ fontSize: 24, color: 'red' }} />
