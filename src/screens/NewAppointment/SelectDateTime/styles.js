@@ -30,3 +30,10 @@ export const Title = styled.Text`
   font-weight: bold;
   color: #333;
 `;
+
+export const DeleteButton = styled.TouchableOpacity`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  // padding: 5px;
+`;

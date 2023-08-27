@@ -8,14 +8,14 @@ import { styles } from './styles';
 import { Title } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 import Confirm from '../NewAppointment/Confirm';
-import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid, FlatList } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid, FlatList, Alert } from 'react-native';
 import { Input, Avatar, Button, Icon } from 'react-native-elements';
 import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { dummyAvatar } from '../../constants/others';
 import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { setLoggedInUserDetail } from '../../store/reducers/userSlice';
-import { Hour, HourList } from '../NewAppointment/SelectDateTime/styles';
+import { Hour, HourList, DeleteButton } from '../NewAppointment/SelectDateTime/styles';
 // import ImagePicker from 'react-native-image-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
@@ -237,9 +237,52 @@ export const Profile = () => {
         setShowAllPhotos(!showAllPhotos);
     };
 
-    // const renderPhotoItem = ({ item }) => (
-    //     <Image source={{ uri: `${FILE_BASE_URL}/${item}` }} style={styles.photoItem} />
-    // );
+    const handleDeleteHour = async (dayOfWeek, time) => {
+        // console.log(dayOfWeek, time);
+
+        try {
+            // Make an API call to delete the timeslot
+            const response = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/schedule/${dayOfWeek}/timeSlots/${time}`, {
+                method: 'DELETE'
+            });
+
+            response.json().then(data => {
+
+                if (data?.user) {
+                    showToastWithGravity(data?.message);
+                    dispatch(setLoggedInUserDetail({
+                        ...loggedInUserDetail,
+                        schedule: data?.user?.schedule,
+                    }))
+                } else {
+                    showToastWithGravity(data.message)
+                }
+
+            })
+            // Update the portfolio in your state after the photo is successfully deleted
+        } catch (error) {
+            console.error('Error deleting photo:', error);
+            showToastWithGravity(error)
+        }
+    };
+
+    const confirmDelete = (dayOfWeek, time) => {
+        Alert.alert(
+            'Confirm Deletion',
+            'Are you sure you want to delete this time slot?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => handleDeleteHour(dayOfWeek, time), // Call delete function if user presses OK
+                },
+            ],
+            { cancelable: true }
+        );
+    };
 
     const renderPhotoItem = ({ item }) => {
         const handleDeletePhoto = async () => {
@@ -354,6 +397,12 @@ export const Profile = () => {
                                     disabled={item.isBooked}
                                 // onPress={() => handleSelectHour(item)}
                                 >
+
+                                    <DeleteButton onPress={() => confirmDelete(schedule.dayOfWeek, item.time)}>
+                                        {/* You can replace this with your actual delete button UI */}
+                                        {/* <Title>X</Title> */}
+                                        <FontAwesome name="minus-circle" style={{ fontSize: 24, color: 'red' }} />
+                                    </DeleteButton>
                                     <Title>{item.time}</Title>
                                 </Hour>
                             )}
