@@ -58,7 +58,7 @@ const CustomDrawerContent = () => {
                     <Text style={[styles.sectionTitle, { color: '#000' }]}>
                         Main
                     </Text>
-                    <DrawerItem
+                    {/* <DrawerItem
                         label="My Profile"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
                         onPress={() => {
@@ -68,7 +68,7 @@ const CustomDrawerContent = () => {
                         icon={({ color, size }) => (
                             <Icon name="map" color={'#000'} size={24} />
                         )}
-                    />
+                    /> */}
                     <DrawerItem
                         label="My Orders"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
@@ -79,14 +79,14 @@ const CustomDrawerContent = () => {
                             <Icon name="globe" color={'#000'} size={24} />
                         )}
                     />
-                    <DrawerItem
+                    {/* <DrawerItem
                         label="Settings"
                         labelStyle={{ fontFamily: 'Ubuntu-Bold', color: '#000' }}
                         onPress={() => navigation.navigate('HomeScreenStack')}
                         icon={({ color, size }) => (
                             <Icon name="medkit" color={'#000'} size={24} />
                         )}
-                    />
+                    /> */}
                 </View>
             </DrawerContentScrollView>
 

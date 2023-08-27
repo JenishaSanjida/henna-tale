@@ -121,6 +121,10 @@ export default function Confirm({ route, navigation }) {
                 else {
                     // Perform any necessary actions after successful appointment
                     showToastWithGravity(data?.message);
+                    navigation.reset({
+                        index: 0, // Index of the screen to navigate to
+                        routes: [{ name: 'Home' }], // Name of the initial screen in your stack navigator
+                    });
                     // dispatch(setLoggedInUserDetail(data?.user));
                 }
 

@@ -408,84 +408,86 @@ export const Profile = () => {
                     </Text>
                 </View>
             </View>
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Schedule</Text>
-                <View style={styles.addTimeSlotContainer}>
-                    <Picker
-                        selectedValue={selectedDay}
-                        onValueChange={(itemValue) => setSelectedDay(itemValue)}
-                        style={styles.pickerContainer}
-                    >
-                        <Picker.Item label="Select a day" value="" />
-                        {schedules.map((schedule) => (
-                            <Picker.Item
-                                key={schedule}
-                                label={schedule}
-                                value={schedule}
-                            />
-                        ))}
-                    </Picker>
-                </View>
-                <View style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between', // Add this to create space between elements
-                    alignItems: 'center', // Align items vertically in the center
-                    marginBottom: 20, // Add margin at the bottom to separate from the next row
-                }}>
+            {loggedInUserDetail?.role == 'designer' &&
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Schedule</Text>
+                    <View style={styles.addTimeSlotContainer}>
+                        <Picker
+                            selectedValue={selectedDay}
+                            onValueChange={(itemValue) => setSelectedDay(itemValue)}
+                            style={styles.pickerContainer}
+                        >
+                            <Picker.Item label="Select a day" value="" />
+                            {schedules.map((schedule) => (
+                                <Picker.Item
+                                    key={schedule}
+                                    label={schedule}
+                                    value={schedule}
+                                />
+                            ))}
+                        </Picker>
+                    </View>
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between', // Add this to create space between elements
+                        alignItems: 'center', // Align items vertically in the center
+                        marginBottom: 20, // Add margin at the bottom to separate from the next row
+                    }}>
 
-                    {/* <View style={{ flex: 1 }}> */}
+                        {/* <View style={{ flex: 1 }}> */}
                         <Text style={{ fontSize: 18 }}>{newTimeSlot}</Text>
-                    {/* </View> */}
+                        {/* </View> */}
 
-                    <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-                        <FontAwesome name="calendar" style={{ fontSize: 24, color: 'black' }} />
-                    </TouchableOpacity>
-                    <TimePickerContainer>
-                        {/* <Button title="Select Time" onPress={() => setShowTimePicker(true)} /> */}
-                        {showTimePicker && (
-                            <DateTimePicker
-                                value={selectedTime}
-                                mode="time"
-                                is24Hour={false}
-                                display="spinner"
-                                onChange={handleTimePickerChange}
-                            />
-                        )}
-                    </TimePickerContainer>
-
-                    <Button
-                        title="Add"
-                        onPress={addTimeSlot}
-                        buttonStyle={styles.addButton}
-                        disabled={(selectedDay && newTimeSlot.trim() !== '') ? false : true}
-                    />
-                </View>
-                {loggedInUserDetail?.schedule.map((schedule) => (
-                    <View key={schedule._id} style={styles.scheduleContainer}>
-                        <Text style={styles.scheduleDay}>{schedule.dayOfWeek}</Text>
-
-                        <HourList
-                            data={schedule.timeSlots}
-                            keyExtractor={item => String(item.time)}
-                            renderItem={({ item }) => (
-                                <Hour
-                                    disabled={item.isBooked}
-                                // onPress={() => handleSelectHour(item)}
-                                >
-
-                                    <DeleteButton onPress={() => confirmDelete(schedule.dayOfWeek, item.time)}>
-                                        {/* You can replace this with your actual delete button UI */}
-                                        {/* <Title>X</Title> */}
-                                        <FontAwesome name="minus-circle" style={{ fontSize: 24, color: 'red' }} />
-                                    </DeleteButton>
-                                    <Title>{item.time}</Title>
-                                </Hour>
+                        <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                            <FontAwesome name="calendar" style={{ fontSize: 24, color: 'black' }} />
+                        </TouchableOpacity>
+                        <TimePickerContainer>
+                            {/* <Button title="Select Time" onPress={() => setShowTimePicker(true)} /> */}
+                            {showTimePicker && (
+                                <DateTimePicker
+                                    value={selectedTime}
+                                    mode="time"
+                                    is24Hour={false}
+                                    display="spinner"
+                                    onChange={handleTimePickerChange}
+                                />
                             )}
+                        </TimePickerContainer>
+
+                        <Button
+                            title="Add"
+                            onPress={addTimeSlot}
+                            buttonStyle={styles.addButton}
+                            disabled={(selectedDay && newTimeSlot.trim() !== '') ? false : true}
                         />
                     </View>
-                ))}
-            </View>
+                    {loggedInUserDetail?.schedule.map((schedule) => (
+                        <View key={schedule._id} style={styles.scheduleContainer}>
+                            <Text style={styles.scheduleDay}>{schedule.dayOfWeek}</Text>
+
+                            <HourList
+                                data={schedule.timeSlots}
+                                keyExtractor={item => String(item.time)}
+                                renderItem={({ item }) => (
+                                    <Hour
+                                        disabled={item.isBooked}
+                                    // onPress={() => handleSelectHour(item)}
+                                    >
+
+                                        <DeleteButton onPress={() => confirmDelete(schedule.dayOfWeek, item.time)}>
+                                            {/* You can replace this with your actual delete button UI */}
+                                            {/* <Title>X</Title> */}
+                                            <FontAwesome name="minus-circle" style={{ fontSize: 24, color: 'red' }} />
+                                        </DeleteButton>
+                                        <Title>{item.time}</Title>
+                                    </Hour>
+                                )}
+                            />
+                        </View>
+                    ))}
+                </View>
+            }
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Portfolio</Text>
                 <View style={styles.imageUploadContainer}>

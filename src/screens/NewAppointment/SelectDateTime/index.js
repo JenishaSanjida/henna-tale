@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 // import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Background from '../../../components/Background';
-import { Container, Hour, HourList } from './styles';
+import { Container, Hour, HourList, Title } from './styles';
 import DateInput from '../../../components/DateInput';
-import { Title, Button } from 'react-native-paper';
+// import { Title, Button } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 // import Confirm from '../NewAppointment/Confirm';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -76,6 +76,7 @@ const SelectDateTime = ({ route, navigation }) => {
                 <HourList
                     data={hours}
                     keyExtractor={item => String(item?.time)}
+                    appointment='appointment'
                     renderItem={({ item }) => (
                         <Hour
                             disabled={item?.isBooked}

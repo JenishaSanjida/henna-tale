@@ -11,7 +11,7 @@ export const HourList = styled.FlatList.attrs({
   showsVerticalScrollIndicator: false,
   columnWrapperStyle: { justifyContent: 'flex-start' },
 })`
-  padding: 20px 0%;
+  padding: ${props => (props.appointment ? '20px 7%' : '20px 0%')};
 `;
 
 export const Hour = styled(RectButton)`
