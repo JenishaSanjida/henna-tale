@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { styles } from './styles';
-import { Title } from 'react-native-paper';
+// import { Title } from 'react-native-paper';
 import { format, parseISO, parse } from 'date-fns';
 import Confirm from '../NewAppointment/Confirm';
 import { View, Text, StyleSheet, ScrollView, Image, ToastAndroid, FlatList, Alert } from 'react-native';
@@ -15,9 +15,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { dummyAvatar } from '../../constants/others';
 import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { setLoggedInUserDetail } from '../../store/reducers/userSlice';
-import { Hour, HourList, DeleteButton } from '../NewAppointment/SelectDateTime/styles';
+import { Hour, HourList, DeleteButton, Title } from '../NewAppointment/SelectDateTime/styles';
 // import ImagePicker from 'react-native-image-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { DateButton, TimePickerContainer } from '../../components/DateInput/styles';
+import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 const Stack = createNativeStackNavigator();
@@ -31,7 +34,9 @@ export const Profile = () => {
     const maxVisiblePhotos = 6;
     const [selectedImage, setSelectedImage] = useState(null);
 
+    const [showTimePicker, setShowTimePicker] = useState(false);
     const [selectedDay, setSelectedDay] = useState('');
+    const [selectedTime, setSelectedTime] = useState(new Date());
     const [newTimeSlot, setNewTimeSlot] = useState('');
     const [schedules, setSchedules] = useState([
         "Saturday",
@@ -325,6 +330,59 @@ export const Profile = () => {
         );
     };
 
+    // const onChange = (event, selectedTime) => {
+    //     // console.log(year, month, day);
+    //     // props.onChange(selectedTime);
+    //     console.log(selectedTime);
+    //     setNewTimeSlot(selectedTime);
+    //     // console.log(newSelectedDate);
+    // };
+
+
+    // function handleOpenPicker() {
+    //     DateTimePickerAndroid.open({
+    //         value: newTimeSlot,
+    //         onChange,
+    //         mode: "time",
+    //     });
+    // }
+
+    // const confirmDelete = (time) => {
+    //     // ... (same as before)
+    // };
+
+    const handleAddTimeSlot = () => {
+        // Convert selectedTime to a formatted time string (HH:MM AM/PM)
+        const newTime = newTimeSlot.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+        });
+
+        // You can proceed with adding the newTimeSlot as needed
+        // For now, let's just log it
+        console.log('New Time Slot:', newTime);
+    };
+
+    const handleTimePickerChange = (event, selected) => {
+        console.log("selected");
+        console.log(selected);
+        if (selected) {
+            const newTime = selected.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true,
+            });
+
+            // You can proceed with adding the newTimeSlot as needed
+            // For now, let's just log it
+            console.log('New Time Slot:', newTime);
+            // setSelectedTime(newTime);
+            setNewTimeSlot(newTime);
+        }
+        setShowTimePicker(false);
+    };
+
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
@@ -371,13 +429,31 @@ export const Profile = () => {
                 <View style={{
                     flex: 1,
                     flexDirection: 'row',
+                    justifyContent: 'space-between', // Add this to create space between elements
+                    alignItems: 'center', // Align items vertically in the center
+                    marginBottom: 20, // Add margin at the bottom to separate from the next row
                 }}>
-                    <Input
-                        value={newTimeSlot}
-                        onChangeText={setNewTimeSlot}
-                        placeholder="Add time slot, e.g. 13:00"
-                        containerStyle={styles.inputContainer}
-                    />
+
+                    {/* <View style={{ flex: 1 }}> */}
+                        <Text style={{ fontSize: 18 }}>{newTimeSlot}</Text>
+                    {/* </View> */}
+
+                    <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                        <FontAwesome name="calendar" style={{ fontSize: 24, color: 'black' }} />
+                    </TouchableOpacity>
+                    <TimePickerContainer>
+                        {/* <Button title="Select Time" onPress={() => setShowTimePicker(true)} /> */}
+                        {showTimePicker && (
+                            <DateTimePicker
+                                value={selectedTime}
+                                mode="time"
+                                is24Hour={false}
+                                display="spinner"
+                                onChange={handleTimePickerChange}
+                            />
+                        )}
+                    </TimePickerContainer>
+
                     <Button
                         title="Add"
                         onPress={addTimeSlot}

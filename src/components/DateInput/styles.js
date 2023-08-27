@@ -17,3 +17,10 @@ export const DateText = styled.Text`
   color: #fff;
   margin-left: 15px;
 `;
+
+
+export const TimePickerContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+`;
