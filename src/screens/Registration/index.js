@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ToastAndroid } from 'react-native';
 import { styles } from './styles';
 import Login from '../Login';
 import { BASE_URL } from '../../constants/apiConfig';
@@ -7,12 +7,15 @@ import { Picker } from '@react-native-picker/picker';
 import { useDispatch, useSelector } from 'react-redux';
 import PlaceDropdowns from '../../components/PlaceDropdowns';
 import { setSelectedDistrict, setSelectedDivision, setSelectedThana } from '../../store/reducers/placeSlice';
+import { setAccessToken, setIsLoggedIn, setLoggedInUserDetail } from '../../store/reducers/userSlice';
+import MyDrawer from '../../components/DrawerNavigator';
 
 export default function Registration() {
 
   const dispatch = useDispatch();
 
   const { selectedDivision, selectedDistrict, selectedThana } = useSelector(state => state.place);
+  const { isLoggedIn } = useSelector((state) => state.user);
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -20,6 +23,14 @@ export default function Registration() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState('designer');
   const [currentScreen, setCurrentScreen] = useState('Register');
+
+  const showToastWithGravity = (message) => {
+    ToastAndroid.showWithGravity(
+      message,
+      ToastAndroid.LONG,
+      ToastAndroid.CENTER,
+    );
+  }
 
   const handleRegister = () => {
     // Validate the form data
@@ -67,9 +78,16 @@ export default function Registration() {
         dispatch(setSelectedDistrict(''));
         dispatch(setSelectedThana(''));
 
+        showToastWithGravity('Registration successful');
+
+        dispatch(setLoggedInUserDetail(data?.user));
+        dispatch(setAccessToken(data?.token));
+        dispatch(setIsLoggedIn(true));
+
       })
       .catch(error => {
         console.error('Registration failed', error);
+        showToastWithGravity('Registration successful');
         // Handle the error case
       });
   };
@@ -78,7 +96,7 @@ export default function Registration() {
     setCurrentScreen(currentScreen === 'Register' ? 'Login' : 'Register');
   };
 
-  return currentScreen === 'Register' ? (
+  return isLoggedIn ? <MyDrawer /> : currentScreen === 'Register' ? (
     <View style={styles.container}>
       <Text style={styles.title}>Registration</Text>
       <TextInput

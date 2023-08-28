@@ -16,14 +16,19 @@ import { dummyAvatar } from '../../constants/others';
 import { BASE_URL, FILE_BASE_URL } from '../../constants/apiConfig';
 import { setLoggedInUserDetail } from '../../store/reducers/userSlice';
 import { Hour, HourList, DeleteButton, Title } from '../NewAppointment/SelectDateTime/styles';
-// import ImagePicker from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { DateButton, TimePickerContainer } from '../../components/DateInput/styles';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-
 const Stack = createNativeStackNavigator();
+const options = {
+    saveToPhotos: true,
+    mediaType: 'photo',
+    includeBase64: false,
+};
+
 
 export const Profile = () => {
 
@@ -102,64 +107,104 @@ export const Profile = () => {
         }
     };
 
+
     const handleEditProfilePicture = async () => {
 
-        // Configure image picker options
-        const options = {
-            mediaType: 'photo',
-            maxWidth: 500,
-            maxHeight: 500,
-        };
-
         // You can also use as a promise without 'callback':
-        const response = await launchImageLibrary(options);
+        // const response = await launchImageLibrary(options);
+        try {
+            ImagePicker.launchImageLibrary(options, async (response) => {
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                } else if (response.errorMessage) {
+                    console.log('ImagePicker Error: ', response.error);
+                } else if (response.assets) {
+                    // const source = { uri: response.uri };
+                    console.log("response");
+                    console.log(response);
+
+
+                    const formData = new FormData();
+
+                    formData.append('avatar', {
+                        uri: response.assets[0]?.uri,
+                        type: response.assets[0]?.type,
+                        name: response.assets[0].fileName,
+                    });
+
+                    // Make an API call to delete the photo using item.id or any appropriate identifier
+                    const apiResponse = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/avatar`, {
+                        method: 'PUT',
+                        body: formData
+                    });
+
+                    apiResponse.json().then(data => {
+
+                        if (data?.avatar) {
+                            showToastWithGravity(data?.message);
+                            dispatch(setLoggedInUserDetail({
+                                ...loggedInUserDetail,
+                                avatar: data?.avatar,
+                            }))
+                        } else {
+                            showToastWithGravity(data.message)
+                        }
+
+                    })
+                }
+            });
+        } catch (error) {
+            console.error('Error updating photo:', error);
+            showToastWithGravity(error)
+        }
 
         // Launch image picker
         // ImagePicker.showImagePicker(options, async (response) => {
-        if (response.didCancel) {
-            console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-            console.log('Image picker error: ', response.errorMessage);
-        } else if (response.assets) {
+        // if (response.didCancel) {
+        //     console.log('User cancelled image picker');
+        // } else if (response.errorMessage) {
+        //     console.log('Image picker error: ', response.errorMessage);
+        // } else if (response.assets) {
 
-            // console.log(response.assets)
-            // setSelectedImage(response.assets[0]?.uri);
-            try {
+        //     // console.log(response.assets)
+        //     // setSelectedImage(response.assets[0]?.uri);
+        //     try {
 
-                const formData = new FormData();
+        //         const formData = new FormData();
 
-                formData.append('avatar', {
-                    uri: response.assets[0]?.uri,
-                    type: response.assets[0]?.type,
-                    name: response.assets[0].fileName,
-                });
+        //         formData.append('avatar', {
+        //             uri: response.assets[0]?.uri,
+        //             type: response.assets[0]?.type,
+        //             name: response.assets[0].fileName,
+        //         });
 
-                // Make an API call to delete the photo using item.id or any appropriate identifier
-                const apiResponse = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/avatar`, {
-                    method: 'PUT',
-                    body: formData
-                });
+        //         // Make an API call to delete the photo using item.id or any appropriate identifier
+        //         const apiResponse = await fetch(`${BASE_URL}/user/${loggedInUserDetail._id}/avatar`, {
+        //             method: 'PUT',
+        //             body: formData
+        //         });
 
-                apiResponse.json().then(data => {
+        //         apiResponse.json().then(data => {
 
-                    if (data?.avatar) {
-                        showToastWithGravity(data?.message);
-                        dispatch(setLoggedInUserDetail({
-                            ...loggedInUserDetail,
-                            avatar: data?.avatar,
-                        }))
-                    } else {
-                        showToastWithGravity(data.message)
-                    }
+        //             if (data?.avatar) {
+        //                 showToastWithGravity(data?.message);
+        //                 dispatch(setLoggedInUserDetail({
+        //                     ...loggedInUserDetail,
+        //                     avatar: data?.avatar,
+        //                 }))
+        //             } else {
+        //                 showToastWithGravity(data.message)
+        //             }
 
-                })
-                // Update the portfolio in your state after the photo is successfully deleted
-            } catch (error) {
-                console.error('Error updating photo:', error);
-                showToastWithGravity(error)
-            }
-        }
+        //         })
+        //         // Update the portfolio in your state after the photo is successfully deleted
+        //     } catch (error) {
+        //         console.error('Error updating photo:', error);
+        //         showToastWithGravity(error)
+        //     }
+        // }
     };
+
 
     // const handleEditProfilePicture = async () => {
     //     try {
@@ -177,57 +222,55 @@ export const Profile = () => {
         // Implement your image upload logic here
         // dispatch(uploadImage(imageUri));
         // Configure image picker options
-        const options = {
-            mediaType: 'photo',
-            maxWidth: 500,
-            maxHeight: 500,
-        };
 
         // You can also use as a promise without 'callback':
-        const response = await launchImageLibrary(options);
+        // const response = await launchImageLibrary(options);
 
-        // Launch image picker
-        // ImagePicker.showImagePicker(options, async (response) => {
-        if (response.didCancel) {
-            console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-            console.log('Image picker error: ', response.errorMessage);
-        } else if (response.assets) {
-            // Dispatch the upload image action with the selected file
-            // dispatch(uploadImage(response));
-            console.log(response.assets)
-            setSelectedImage(response.assets[0]?.uri);
-            try {
-                const formData = new FormData();
-                formData.append('image', {
-                    uri: response.assets[0]?.uri,
-                    type: response.assets[0]?.type,
-                    name: response.assets[0].fileName,
-                });
+        try {
+            ImagePicker.launchImageLibrary(options, async (response) => {
+                // Launch image picker
+                // ImagePicker.showImagePicker(options, async (response) => {
+                if (response.didCancel) {
+                    console.log('User cancelled image picker');
+                } else if (response.errorMessage) {
+                    console.log('Image picker error: ', response.errorMessage);
+                } else if (response.assets) {
+                    // Dispatch the upload image action with the selected file
+                    // dispatch(uploadImage(response));
+                    console.log(response.assets)
+                    setSelectedImage(response.assets[0]?.uri);
 
-                const apiResponse = await fetch(`${BASE_URL}/users/${loggedInUserDetail._id}/portfolio/images`, {
-                    method: 'POST',
-                    body: formData,
-                });
+                    const formData = new FormData();
+                    formData.append('image', {
+                        uri: response.assets[0]?.uri,
+                        type: response.assets[0]?.type,
+                        name: response.assets[0].fileName,
+                    });
 
-                apiResponse.json().then(data => {
+                    const apiResponse = await fetch(`${BASE_URL}/users/${loggedInUserDetail._id}/portfolio/images`, {
+                        method: 'POST',
+                        body: formData,
+                    });
 
-                    if (data?.portfolio) {
-                        showToastWithGravity(data?.message);
-                        dispatch(setLoggedInUserDetail({
-                            ...loggedInUserDetail,
-                            portfolio: data?.portfolio,
-                        }))
-                    } else {
-                        showToastWithGravity(data.message)
-                    }
+                    apiResponse.json().then(data => {
 
-                })
+                        if (data?.portfolio) {
+                            showToastWithGravity(data?.message);
+                            dispatch(setLoggedInUserDetail({
+                                ...loggedInUserDetail,
+                                portfolio: data?.portfolio,
+                            }))
+                        } else {
+                            showToastWithGravity(data.message)
+                        }
 
-            } catch (error) {
-                console.error('Image upload error:', error);
-                showToastWithGravity(error);
-            }
+                    })
+
+                }
+            });
+        } catch (error) {
+            console.error('Image upload error:', error);
+            showToastWithGravity(error);
         }
         // });
     };
@@ -499,27 +542,30 @@ export const Profile = () => {
                         <Text style={styles.uploadButtonText}>Upload Image</Text>
                     </TouchableOpacity>
                 </View>
-                <View>
-                    <FlatList
-                        data={showAllPhotos ? loggedInUserDetail?.portfolio?.designs : loggedInUserDetail?.portfolio?.designs.slice(0, maxVisiblePhotos)}
-                        renderItem={renderPhotoItem}
-                        keyExtractor={(item, index) => index.toString()}
-                        numColumns={3}
-                        contentContainerStyle={styles.photoGrid}
-                        ListFooterComponent={() =>
-                            loggedInUserDetail?.portfolio?.designs.length > maxVisiblePhotos && (
-                                <TouchableOpacity
-                                    style={styles.morePhotosButton}
-                                    onPress={handleToggleShowAllPhotos}
-                                >
-                                    <Text style={styles.morePhotosButtonText}>
-                                        {showAllPhotos ? 'Show Less' : 'Show More'}
-                                    </Text>
-                                </TouchableOpacity>
-                            )
-                        }
-                    />
-                </View>
+
+                {loggedInUserDetail?.portfolio?.designs &&
+                    <View>
+                        <FlatList
+                            data={showAllPhotos ? loggedInUserDetail?.portfolio?.designs : loggedInUserDetail?.portfolio?.designs.slice(0, maxVisiblePhotos)}
+                            renderItem={renderPhotoItem}
+                            keyExtractor={(item, index) => index.toString()}
+                            numColumns={3}
+                            contentContainerStyle={styles.photoGrid}
+                            ListFooterComponent={() =>
+                                loggedInUserDetail?.portfolio?.designs.length > maxVisiblePhotos && (
+                                    <TouchableOpacity
+                                        style={styles.morePhotosButton}
+                                        onPress={handleToggleShowAllPhotos}
+                                    >
+                                        <Text style={styles.morePhotosButtonText}>
+                                            {showAllPhotos ? 'Show Less' : 'Show More'}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )
+                            }
+                        />
+                    </View>
+                }
             </View>
         </ScrollView>
     );
