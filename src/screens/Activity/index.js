@@ -47,9 +47,9 @@ const Activity = () => {
                 <Text>Join us on Henna Design, where artists and patrons come together to weave intricate tales through henna. Unleash your creativity, book your favorite designers, and adorn yourself with designs that tell your story. Embrace the elegance of henna, redefined for the digital age.</Text>
             </View>
 
-            <TouchableOpacity style={styles.downloadButton}>
+            {/* <TouchableOpacity style={styles.downloadButton}>
                 <Text style={styles.buttonText}>Download Henna Design</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </ScrollView>
     )
 }
