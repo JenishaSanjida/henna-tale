@@ -422,8 +422,12 @@ export const Profile = () => {
             console.log('New Time Slot:', newTime);
             // setSelectedTime(newTime);
             setNewTimeSlot(newTime);
+            setShowTimePicker(false);
         }
-        setShowTimePicker(false);
+        else {
+            setShowTimePicker(false);
+        }
+
     };
 
 
