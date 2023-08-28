@@ -20,6 +20,11 @@ export default function DateInput({ date, ...props }) {
 
     const { accessToken, selectedDesigner } = useSelector((state) => state.user);
 
+    const today = new Date();
+    const maxDate = new Date();
+    maxDate.setDate(today.getDate() + 5); // Set maximum date as today + 5 days
+
+
     const dateFormatted = useMemo(
         () => format(date, "dd MMMM yyyy", { locale: enUS }),
         [date],
@@ -77,6 +82,8 @@ export default function DateInput({ date, ...props }) {
             value: date,
             onChange,
             mode: "date",
+            minimumDate: date, // Set minimum date as tomorrow
+            maximumDate: maxDate // Set maximum date as today + 5 days
         });
     }
 

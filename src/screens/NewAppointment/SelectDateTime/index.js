@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 const SelectDateTime = ({ route, navigation }) => {
 
     const { designerSchedules } = useSelector((state) => state.user);
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     console.log("navigation");
     console.log(navigation);
@@ -35,9 +37,9 @@ const SelectDateTime = ({ route, navigation }) => {
 
         ),
         headerLeftContainerStyle: { marginLeft: 10 },
-    })
+    });
 
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(tomorrow);
     const [hours, setHours] = useState([]);
     const [selectedTime, setSelectedTime] = useState("");
 
