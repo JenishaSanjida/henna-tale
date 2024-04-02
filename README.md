@@ -8,6 +8,8 @@
 
 ## Table of Contents
 * [Description](#description)
+  - [Designer's Flow](#designer-flow)
+  - [Customer's Flow](#customer-flow)
 * [Used Technologies](#used-technologies)
 * [Used Awesome Things](#used-awesome-things)
 * [Install and Run](#install-and-run)
@@ -17,7 +19,68 @@
 
 ### Description
 
-This project is for henna design
+#### Designer Flow
+
+**Designer App** is a platform where henna designers can showcase their designs, set their availability, and connect with customers.
+
+##### Registration as a Designer
+
+1. ![Register as Designer](screenshots/designer/1-registration-page.png)
+   - **Description:** Users can register as a designer by providing their division, district, and thana, enabling customers to search for them based on these criteria.
+
+##### Login as a Designer
+2. ![Login as Designer](screenshots/designer/2-login-page.png)
+   - **Description:** Designers can log in to access their profiles and manage their designs and appointments.
+
+##### View Designers Profiles
+3. ![View Designers Profiles](screenshots/designer/4-designer-profile-from-designer.png)
+   - **Description:** Designers can browse through other designers' profiles, view their designs, and explore their portfolios.
+
+##### Search Another Designer
+4. ![Search Another Designer](screenshots/designer/4-search-page.png)
+   - **Description:** Designers can search for other designers based on their address, including division, district, and thana.
+
+##### Set Availability
+5. ![Set Availability](screenshots/designer/5-profile-page-1.png)
+   - **Description:** Designers can set their availability by specifying time slots based on their convenient timings.
+
+##### Upload Portfolio Designs
+6. ![Upload Portfolio Designs](screenshots/designer/9-profile-page-5.png)
+   - **Description:** Designers can upload their henna designs to showcase their portfolio and capabilities.
+
+##### View Bookings
+7. ![View Bookings](screenshots/designer/11-orders-from-leftbar.png)
+   - **Description:** Designers can view their bookings with customers from the left sidebar, allowing them to manage their appointments effectively.
+
+<br>
+
+#### Customer Flow
+
+**Customer App** is a platform where customers can search for nearby henna designers, view their profiles, and book appointments for henna services.
+
+##### Registration and Login
+1. ![Register and Login](screenshots/customer/register_login_customer.png)
+   - **Description:** Customers can register and login to access the app's features and functionalities.
+
+##### Search Designers
+2. ![Search Designers](screenshots/customer/1-search-page.png)
+   - **Description:** Customers can search for designers by divisions, district, and thana to find nearby designers.
+
+##### View Designer's Profile
+3. ![View Designer's Profile](screenshots/customer/2-designer-profile-from-customer.png)
+   - **Description:** Customers can view a designer's profile and explore their portfolio to choose a designer according to their design preferences.
+
+##### Book Appointment
+4. ![Book Appointment](screenshots/customer/3-select-designer-for-availability.png)
+   - **Description:** Customers can book an appointment with a designer of their choice, selecting a date and viewing available time slots for that date.
+
+##### Provide Contact Details
+5. ![Provide Contact Details](screenshots/customer/5-confirmation-of-schedule-with-the-designer.png)
+   - **Description:** Customers can provide their contact details while booking an appointment. The designer will contact the customer to provide home service at the specified time and location.
+
+##### View Bookings
+6. ![View Bookings](screenshots/customer/7-booking-from-leftbar.png)
+   - **Description:** Customers can view their bookings with designers, keeping track of their upcoming appointments.
 
 <br>
 
