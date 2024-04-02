@@ -5,6 +5,10 @@
   <h1>Henna Tale</h1>
 </div>
 
+<br>
+
+**This is the frontend of the following backend:** [https://github.com/JenishaSanjida/henna-server.git](https://github.com/JenishaSanjida/henna-server.git)
+
 ## Table of Contents
 * [Description](#description)
 * [Used Technologies](#used-technologies)
