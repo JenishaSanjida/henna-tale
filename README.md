@@ -1,7 +1,4 @@
 <div align="center">
-  <a href="#">
-    <img alt="Shahnawaz Hossan" src="./assets/educate.png" />
-  </a>
   <h1>Henna Tale</h1>
 </div>
 
